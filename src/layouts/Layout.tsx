@@ -1,18 +1,33 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import tailwind from "../style/tailwind"
+import data from "../data.json"
 
 export default function Layout() {
 
   const { H1, H3, H4 } = tailwind()
   const [showSidebar, setShowSidebar] = useState(false)
+  const [boards, setBoards] = useState<TBoard[]>()
 
+  useEffect(() => {
+    const storedData = localStorage.getItem("boards")
+    if (!storedData) {
+      const stringedData = JSON.stringify(data.boards)
+      localStorage.setItem("boards", stringedData)
+      setBoards(data.boards)
+    } else {
+      const parsedData = JSON.parse(storedData)
+      setBoards(parsedData)
+    }
+  }, [])
+  
+  console.log(boards)
   return (
     <div className="bg-[#20212C] min-h-[100vh]">
       <div onClick={() => setShowSidebar(true)} className={`p-[19px_22px_19px_18px] cursor-pointer bg-[#635FC7] rounded-[0_100px_100px_0] transition-all duration-1000 fixed bottom-[5%] left-0 ${showSidebar && "left-[-1000px]"}`}>
         <img src="/images/icon-show-sidebar.svg" alt="" />
       </div>
       <header className="w-[100%] flex relative bg-[#2B2C37] transition-all duration-1000 border-b-[1px] border-solid border-[#3E3F4E]">
-        <div className={`fixed ${showSidebar ? "left-0" : "left-[-300px]"} transition-all duration-1000 top-0 h-[100%] flex flex-col justify-between bg-[#2B2C37]`}>
+        <div className={`fixed ${showSidebar ? "left-0" : "left-[-300px]"} border-r-[1px] border-solid border-[#3E3F4E] transition-all duration-1000 top-0 h-[100%] flex flex-col justify-between bg-[#2B2C37]`}>
           <div className="flex flex-col gap-[54px] items-start">
             <img src="/images/logo-light.svg" className="m-[32px_0_0_32px]" alt="" />
             <div className="w-[276px] flex flex-col gap-[19px] mr-[24px]">
@@ -33,11 +48,11 @@ export default function Layout() {
           </div>
         </div>
         <div className="flex gap-[32px] w-[100%]">
-          <div className="p-[35px_32px_35px_24px] border-r-[1px] border-solid border-[#3E3F4E]">
-            <img src="/images/logo-light.svg" alt="" />
+          <div className={`p-[35px_32px_35px_24px] border-r-[1px] border-solid border-[#3E3F4E]`}>
+            <img src="/images/logo-light.svg" className="min-w-[152px]!" alt="" />
           </div>
           <div className="p-[24px_32px] items-center w-[100%] flex justify-between">
-            <h1 className={`${H1} text-[#FFFFFF]!`}>Platform Launch</h1>
+            <h1 className={`${H1} text-[#FFFFFF]! transition-all duration-1000 ${showSidebar && "ml-[77px]"}`}>Platform Launch</h1>
             <div className="flex gap-[24px] items-center">
               <button className={`p-[15px_24px] bg-[#635FC7] rounded-[24px] ${H3} text-[#FFFFFF]`}>
                 + Add New Task
