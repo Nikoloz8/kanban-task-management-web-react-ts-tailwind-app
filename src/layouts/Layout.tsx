@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import tailwind from "../style/tailwind"
 import data from "../data.json"
-import { useNavigate, useParams } from "react-router-dom"
+import { Outlet, useNavigate, useParams } from "react-router-dom"
 
 export default function Layout() {
 
@@ -25,7 +25,7 @@ export default function Layout() {
   const navigate = useNavigate()
 
   return (
-    <div className="bg-[#20212C] min-h-[100vh]">
+    <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
       <div onClick={() => setShowSidebar(true)} className={`p-[19px_22px_19px_18px] cursor-pointer bg-[#635FC7] rounded-[0_100px_100px_0] transition-all duration-1000 fixed bottom-[5%] left-0 ${showSidebar && "left-[-1000px]"}`}>
         <img src="/images/icon-show-sidebar.svg" alt="" />
       </div>
@@ -67,6 +67,7 @@ export default function Layout() {
           </div>
         </div>
       </header>
+      <Outlet context={{ boards, setBoards }} />
     </div>
   )
 }
