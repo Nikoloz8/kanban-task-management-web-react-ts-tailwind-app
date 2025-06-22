@@ -49,6 +49,21 @@ export default function Board() {
 
     const task = getTaskByName()
 
+    const handleSaveColumns = (filteredColumns: any) => {
+        const editedBoard = {
+            name: paramsBoard?.name ?? "",
+            columns: filteredColumns ?? [],
+        }
+
+        const filteredBoards = boards.filter((e) => e.name !== paramsBoard?.name)
+        if (!editedBoard.name || !editedBoard) return
+
+        filteredBoards.push(editedBoard)
+        setBoards(filteredBoards)
+        const stringedBoards = JSON.stringify(filteredBoards)
+        localStorage.setItem("boards", stringedBoards)
+    }
+
     const handleSaveChangedTasks = (editedTasks: any) => {
         const column = getColumnByName()
         const subtasks = getTaskByName()?.subtasks
@@ -67,18 +82,7 @@ export default function Board() {
         )
         filteredColumns?.push(EditedColumn)
 
-        const editedBoard = {
-            name: paramsBoard?.name ?? "",
-            columns: filteredColumns ?? [],
-        }
-
-        const filteredBoards = boards.filter((e) => e.name !== paramsBoard?.name)
-        if (!editedBoard.name || !editedBoard) return
-
-        filteredBoards.push(editedBoard)
-        setBoards(filteredBoards)
-        const stringedBoards = JSON.stringify(filteredBoards)
-        localStorage.setItem("boards", stringedBoards)
+        handleSaveColumns(filteredColumns)
     }
 
     const handleChangeIsCompleted = (index: number, value: boolean) => {
@@ -116,15 +120,52 @@ export default function Board() {
 
     const sortedColumn = paramsBoard?.columns?.sort((a, b) => a.tasks.length - b.tasks.length)
 
+    const [showDotMenu, setShowDotMenu] = useState(false)
+
+    const handleChangeStatus = (newStatus: string) => {
+        const task = getTaskByName()
+        if (!task) return
+
+        const prevColumn = paramsBoard?.columns.find(col => col.name === task.status)
+        const newColumn = paramsBoard?.columns.find(col => col.name === newStatus)
+        if (!prevColumn || !newColumn) return
+
+        const updatedPrevTasks = prevColumn.tasks.filter(t => t.title !== task.title)
+
+        const updatedTask = {
+            ...task,
+            status: newStatus,
+        }
+
+        const updatedNewTasks = [...newColumn.tasks, updatedTask]
+
+        const updatedColumns = paramsBoard?.columns.map(col => {
+            if (col.name === prevColumn.name) {
+                return { ...col, tasks: updatedPrevTasks }
+            } else if (col.name === newColumn.name) {
+                return { ...col, tasks: updatedNewTasks }
+            } else {
+                return col
+            }
+        })
+
+        handleSaveColumns(updatedColumns)
+    }
+
+    const [showStatus, setShowStatus] = useState(false)
+
 
     return (
         <div className={`flex p-[24px] gap-[24px] transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>
-            {showDetails && <div onClick={() => setShowDetails(false)} className="fixed w-[100%] h-[100%] top-0 left-0 bg-[rgba(0,0,0,0.5)] z-10"></div>}
+            {showDetails && <div onClick={() => {
+                setShowDetails(false)
+                setShowDotMenu(false)
+            }} className="fixed w-[100%] h-[100%] top-0 left-0 bg-[rgba(0,0,0,0.5)] z-10"></div>}
             <div className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-[32px] bg-[#2B2C37] w-[480px] flex flex-col gap-[24px] rounded-[6px] z-10 ${!showDetails && "hidden"}`}>
                 <div className="flex justify-between items-center relative">
                     <h2 className={`${H2} text-[#FFFFFF]! w-[90%]`}>{task?.title}</h2>
-                    <img className="cursor-pointer" src="/images/icon-vertical-ellipsis.svg" alt="" />
-                    <div className="absolute p-[16px] flex flex-col gap-[16px] bg-[#20212C] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] right-[-80px] bottom-[-95px]">
+                    <img onClick={() => setShowDotMenu(!showDotMenu)} className="cursor-pointer" src="/images/icon-vertical-ellipsis.svg" alt="" />
+                    <div className={`absolute p-[16px] flex flex-col gap-[16px] bg-[#20212C] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] right-[-80px] bottom-[-110px] ${!showDotMenu && "hidden"}`}>
                         <h5 className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Task</h5>
                         <h5 onClick={() => {
                             handleDeleteTask()
@@ -145,11 +186,21 @@ export default function Board() {
                         </label>
                     })}
                 </div>
-                <div className="flex flex-col gap-[8px]">
+                <div className="flex flex-col relative gap-[8px]">
                     <h4 className={`${H4} text-[#FFFFFF]`}>Current Status</h4>
-                    <div className={`w-[100%] p-[8px_16px] flex justify-between rounded-[4px] border-[1px] border-solid border-[rgba(130,143,163,0.25)] items-center ${P1} text-[#FFFFFF]`}>
-                        Doing
-                        <img src="/images/icon-chevron-down.svg" alt="" />
+                    <div onClick={() => setShowStatus(!showStatus)} className={`cursor-pointer w-[100%] p-[8px_16px] flex justify-between rounded-[4px] border-[1px] border-solid border-[rgba(130,143,163,0.25)] items-center ${P1} text-[#FFFFFF]`}>
+                        {task?.status}
+                        <img src="/images/icon-chevron-down.svg" className={`${showStatus && "rotate-180"} transition-all duration-400`} alt="" />
+                    </div>
+                    <div className={`absolute w-[100%] flex flex-col gap-[8px] bg-[#20212C] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] p-[16px] top-[66px] ${!showStatus && "hidden"}`}>
+                        {paramsBoard?.columns.map((e, i) => {
+                            return <h5 key={i} onClick={() => {
+                                handleChangeStatus(e.name)
+                                setShowDetails(false)
+                                setShowDotMenu(false)
+                                setShowStatus(false)
+                            }} className={`${P1} text-[#828FA3] cursor-pointer`}>{e.name}</h5>
+                        })}
                     </div>
                 </div>
             </div>
