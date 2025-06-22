@@ -5,7 +5,6 @@ import { useState } from "react"
 export default function Board() {
     const { boards, setBoards, showSidebar } = useOutletContext<TBoardPage>()
     const { board } = useParams()
-    console.log(board)
     let paramsBoard: TBoard | undefined;
     if (boards) {
         paramsBoard = boards.find(e => e.name === board)
@@ -34,14 +33,47 @@ export default function Board() {
 
     const [showDetails, setShowDetails] = useState(false)
 
+    const getColumnByName = () => {
+        const columnName = localStorage.getItem("column name")
+        const column = paramsBoard?.columns.find((e) => e.name === columnName)
+        return column
+    }
+
     const getTaskByName = () => {
         const taskName = localStorage.getItem("task name")
-        const columnName = localStorage.getItem("column name")
-        const task = paramsBoard?.columns.find((e) => e.name === columnName)?.tasks.find((e) => e.title === taskName)
+        const task = getColumnByName()?.tasks.find((e) => e.title === taskName)
         return task
     }
 
     const task = getTaskByName()
+
+    const handleChangeIsCompleted = (index: number) => {
+        const column = getColumnByName()
+        const subtasks = getTaskByName()?.subtasks
+        if (!subtasks) return
+        const subtask = subtasks[index]
+        subtask.isCompleted = !subtask.isCompleted
+        const task = getTaskByName()
+        const filteredSubtasks = task?.subtasks.filter((_e, i) => i !== index)
+        filteredSubtasks?.push(subtask)
+        if (!task) return
+        const editedTask = { title: task?.title, description: task?.description, status: task?.status, subtasks: filteredSubtasks ?? [] }
+        const filteredTasks = column?.tasks.filter((e) => e.title !== task?.title)
+        if (editedTask) {
+            filteredTasks?.push(editedTask)
+        }
+        if (!column?.name || !filteredTasks) return
+        const EditedColumn = { name: column.name, tasks: filteredTasks, color: column.color, }
+        const filteredColumns = paramsBoard?.columns.filter((e) => e.name !== localStorage.getItem("column name"))
+        filteredColumns?.push(EditedColumn)
+        const editedBoard = { name: paramsBoard?.name ?? "", columns: filteredColumns ?? [] }
+        const filteredBoards = boards.filter((e) => e.name !== paramsBoard?.name)
+        if (!editedBoard.name || !editedBoard) return
+        filteredBoards.push(editedBoard)
+        setBoards(filteredBoards)
+        const stringedBoards = JSON.stringify(filteredBoards)
+        localStorage.setItem("boards", stringedBoards)
+    }
 
     return (
         <div className={`flex p-[24px] gap-[24px] transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>
@@ -55,10 +87,13 @@ export default function Board() {
                 <div className="flex flex-col gap-[8px]">
                     <h4 className={`${H4} text-[#FFFFFF]`}>Subtasks ({getSubtasksCompletedCount(task?.subtasks)} of {task?.subtasks.length})</h4>
                     {task?.subtasks.map((k, a) => {
-                        return <div key={a} className={`w-[100%] p-[12px] flex items-center bg-[#20212C] rounded-[4px] gap-[16px] mt-[8px] ${H4} tracking-[0]! text-[#FFFFFF]`}>
-                            <input type="checkbox" />
-                            {k.title}
-                        </div>
+                        return <label key={a} htmlFor={`subtask${a}`} className={`w-[100%] cursor-pointer p-[12px] flex items-center bg-[#20212C] rounded-[4px] gap-[16px] mt-[8px] ${H4} tracking-[0]! text-[#FFFFFF]`}>
+                            <input type="checkbox" defaultChecked={k.isCompleted} onChange={() => handleChangeIsCompleted(a)} id={`subtask${a}`} className="hidden peer" />
+                            <div className="bg-[#2B2C37] w-[16px] h-[16px] rounded-[2px] border-[1px] border-solid border-[rgba(130,143,163,0.25)] cursor-poiner peer-checked:bg-[#635FC7] peer-checked:bg-[url('/images/icon-check.svg')] bg-center bg-no-repeat"></div>
+                            <span className="peer-checked:line-through peer-checked:text-[#FFFFFF]">
+                                {k.title}
+                            </span>
+                        </label>
                     })}
                 </div>
                 <div className="flex flex-col gap-[8px]">
