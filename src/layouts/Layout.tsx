@@ -26,7 +26,7 @@ export default function Layout() {
 
   return (
     <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
-      <div onClick={() => setShowSidebar(true)} className={`p-[19px_22px_19px_18px] cursor-pointer bg-[#635FC7] rounded-[0_100px_100px_0] transition-all duration-1000 fixed bottom-[5%] left-0 ${showSidebar && "left-[-1000px]"}`}>
+      <div onClick={() => setShowSidebar(true)} className={`p-[19px_22px_19px_18px] cursor-pointer bg-[#635FC7] rounded-[0_100px_100px_0] z-10 transition-all duration-1000 fixed bottom-[5%] left-0 ${showSidebar && "left-[-1000px]"}`}>
         <img src="/images/icon-show-sidebar.svg" alt="" />
       </div>
       <header className="w-[100%] flex relative bg-[#2B2C37] transition-all duration-1000 border-b-[1px] border-solid border-[#3E3F4E]">
@@ -67,7 +67,7 @@ export default function Layout() {
           </div>
         </div>
       </header>
-      <Outlet context={{ boards, setBoards }} />
+      <Outlet context={{ boards, setBoards, showSidebar }} />
     </div>
   )
 }
