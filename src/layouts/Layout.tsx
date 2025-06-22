@@ -5,7 +5,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom"
 
 export default function Layout() {
 
-  const { H1, H3, H4 } = tailwind()
+  const { H1, H3, H4, P1, H2 } = tailwind()
   const [showSidebar, setShowSidebar] = useState(false)
   const [boards, setBoards] = useState<TBoard[]>()
 
@@ -24,13 +24,39 @@ export default function Layout() {
   const { board } = useParams()
   const navigate = useNavigate()
 
+  const handleDeleteBoard = () => {
+    const filteredBoards = boards?.filter((e) => e.name !== board)
+    setBoards(filteredBoards)
+    const stringedFilteredboards = JSON.stringify(filteredBoards)
+    localStorage.setItem("boards", stringedFilteredboards)
+
+  }
+
+  const [deleteBoard, setDeleteBoard] = useState(false)
+  const [showDotMenu, setShowDotMenu] = useState(false)
+
   return (
     <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
+      <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-20 rounded-[6px] w-[480px] ${!deleteBoard && "hidden"}`}>
+        <h2 className={`${H2} text-[#EA5555]`}>Delete this board?</h2>
+        <p className={`${P1} text-[#828FA3]`}>Are you sure you want to delete the {board} board? This action will remove all columns and tasks and cannot be reversed.</p>
+        <div className="flex justify-between">
+          <button onClick={() => {
+            handleDeleteBoard()
+            setDeleteBoard(false)
+          }} className={`p-[14px_78px] rounded-[20px] bg-[#EA5555] hover:bg-[#FF9898] cursor-pointer ${H3} text-[1.3rem]! text-[#FFFFFF]`}>
+            Delete
+          </button>
+          <button onClick={() => setDeleteBoard(false)} className={`p-[14px_78px] cursor-pointer rounded-[20px] bg-[#FFFFFF] ${H3} text-[1.3rem]! text-[#635FC7]`}>
+            Cancel
+          </button>
+        </div>
+      </div>
       <div onClick={() => setShowSidebar(true)} className={`p-[19px_22px_19px_18px] cursor-pointer bg-[#635FC7] rounded-[0_100px_100px_0] z-10 transition-all duration-1000 fixed bottom-[5%] left-0 ${showSidebar && "left-[-1000px]"}`}>
         <img src="/images/icon-show-sidebar.svg" alt="" />
       </div>
       <header className="w-[100%] flex relative bg-[#2B2C37] transition-all duration-1000 border-b-[1px] border-solid border-[#3E3F4E]">
-        <div className={`fixed z-20 ${showSidebar ? "left-0" : "left-[-300px]"} border-r-[1px] border-solid border-[#3E3F4E] transition-all duration-1000 top-0 h-[100%] flex flex-col justify-between bg-[#2B2C37]`}>
+        <div className={`fixed z-20 ${showSidebar ? "left-0" : "left-[-310px]"} border-r-[1px] border-solid border-[#3E3F4E] transition-all duration-1000 top-0 h-[100%] flex flex-col justify-between bg-[#2B2C37]`}>
           <div className="flex flex-col gap-[54px] items-start">
             <img src="/images/logo-light.svg" className="m-[32px_0_0_32px]" alt="" />
             <div className="w-[276px] flex flex-col gap-[19px] mr-[24px]">
@@ -62,12 +88,24 @@ export default function Layout() {
               <button className={`p-[15px_24px] bg-[#635FC7] rounded-[24px] ${H3} text-[#FFFFFF]`}>
                 + Add New Task
               </button>
-              <img src="/images/icon-vertical-ellipsis.svg" alt="" />
+              <div className="relative">
+                <img className="cursor-pointer" onClick={() => {
+                  setShowDotMenu(!showDotMenu)
+                  
+                }} src="/images/icon-vertical-ellipsis.svg" alt="" />
+                <div className={`absolute ${!showDotMenu && "hidden"} p-[16px] flex flex-col gap-[16px] bg-[#20212C] z-10 shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] top-[50px] right-0`}>
+                  <h5 className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Board</h5>
+                  <h5 onClick={() => {
+                    setDeleteBoard(true)
+                    setShowDotMenu(false)
+                  }} className={`${P1} text-[#EA5555] cursor-pointer`}>Delete Board</h5>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </header>
-      <Outlet context={{ boards, setBoards, showSidebar }} />
+      <Outlet context={{ boards, setBoards, showSidebar, deleteBoard, setDeleteBoard }} />
     </div>
   )
 }

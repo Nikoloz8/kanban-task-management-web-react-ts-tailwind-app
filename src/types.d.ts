@@ -21,4 +21,7 @@ type TBoardPage = {
     boards: TBoard[]
     setBoards: React.Dispatch<React.SetStateAction<TBoard[]>>
     showSidebar: boolean
+    deleteBoard: boolean
+    setDeleteBoard: React.Dispatch<React.SetStateAction<boolean>>
+
 }

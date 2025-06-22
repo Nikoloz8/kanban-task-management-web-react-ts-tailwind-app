@@ -3,7 +3,7 @@ import tailwind from "../style/tailwind"
 import { useState } from "react"
 
 export default function Board() {
-    const { boards, setBoards, showSidebar } = useOutletContext<TBoardPage>()
+    const { boards, setBoards, showSidebar, deleteBoard, setDeleteBoard } = useOutletContext<TBoardPage>()
     const { board } = useParams()
     let paramsBoard: TBoard | undefined;
     if (boards) {
@@ -151,16 +151,18 @@ export default function Board() {
 
         handleSaveColumns(updatedColumns)
     }
-
     const [showStatus, setShowStatus] = useState(false)
+
 
 
     return (
         <div className={`flex p-[24px] gap-[24px] transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>
-            {showDetails && <div onClick={() => {
+            {showDetails || deleteBoard ? <div onClick={() => {
                 setShowDetails(false)
                 setShowDotMenu(false)
-            }} className="fixed w-[100%] h-[100%] top-0 left-0 bg-[rgba(0,0,0,0.5)] z-10"></div>}
+                setShowStatus(false)
+                setDeleteBoard(false)
+            }} className="fixed w-[100%] h-[100%] top-0 left-0 bg-[rgba(0,0,0,0.5)] z-10"></div> : ""}
             <div className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-[32px] bg-[#2B2C37] w-[480px] flex flex-col gap-[24px] rounded-[6px] z-10 ${!showDetails && "hidden"}`}>
                 <div className="flex justify-between items-center relative">
                     <h2 className={`${H2} text-[#FFFFFF]! w-[90%]`}>{task?.title}</h2>
@@ -177,7 +179,7 @@ export default function Board() {
                 <div className="flex flex-col gap-[8px]">
                     <h4 className={`${H4} text-[#FFFFFF]`}>Subtasks ({getSubtasksCompletedCount(task?.subtasks)} of {task?.subtasks.length})</h4>
                     {task?.subtasks.map((k, a) => {
-                        return <label key={a} htmlFor={`subtask${a}`} className={`w-[100%] cursor-pointer p-[12px] flex items-center bg-[#20212C] rounded-[4px] gap-[16px] mt-[8px] ${H4} tracking-[0]! text-[#FFFFFF]`}>
+                        return <label key={a} htmlFor={`subtask${a}`} className={`w-[100%] cursor-pointer p-[12px] flex items-center bg-[#20212C] rounded-[4px] gap-[16px] mt-[8px] ${H4} tracking-[0]! hover:bg-[rgba(99,95,199,0.25)] text-[#FFFFFF]`}>
                             <input type="checkbox" checked={k.isCompleted} onChange={(e) => handleChangeIsCompleted(a, e.target.checked)} id={`subtask${a}`} className="hidden peer" />
                             <div className="bg-[#2B2C37] w-[16px] h-[16px] rounded-[2px] border-[1px] border-solid border-[rgba(130,143,163,0.25)] cursor-poiner peer-checked:bg-[#635FC7] peer-checked:bg-[url('/images/icon-check.svg')] bg-center bg-no-repeat"></div>
                             <span className="peer-checked:line-through peer-checked:text-[rgba(255,255,255,0.5)]!">
@@ -188,7 +190,7 @@ export default function Board() {
                 </div>
                 <div className="flex flex-col relative gap-[8px]">
                     <h4 className={`${H4} text-[#FFFFFF]`}>Current Status</h4>
-                    <div onClick={() => setShowStatus(!showStatus)} className={`cursor-pointer w-[100%] p-[8px_16px] flex justify-between rounded-[4px] border-[1px] border-solid border-[rgba(130,143,163,0.25)] items-center ${P1} text-[#FFFFFF]`}>
+                    <div onClick={() => setShowStatus(!showStatus)} className={`cursor-pointer w-[100%] p-[8px_16px] flex justify-between rounded-[4px] border-[1px] border-solid border-[rgba(130,143,163,0.25)] hover:border-[#635FC7] items-center ${P1} text-[#FFFFFF]`}>
                         {task?.status}
                         <img src="/images/icon-chevron-down.svg" className={`${showStatus && "rotate-180"} transition-all duration-400`} alt="" />
                     </div>
