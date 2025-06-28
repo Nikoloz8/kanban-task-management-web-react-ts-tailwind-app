@@ -77,9 +77,7 @@ export default function Board() {
             color: column.color,
         }
 
-        const filteredColumns = paramsBoard?.columns.filter(
-            (e) => e.name !== localStorage.getItem("column name")
-        )
+        const filteredColumns = paramsBoard?.columns.filter((e) => e.name !== localStorage.getItem("column name"))
         filteredColumns?.push(EditedColumn)
 
         handleSaveColumns(filteredColumns)
