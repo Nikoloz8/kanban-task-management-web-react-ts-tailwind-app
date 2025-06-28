@@ -5,10 +5,10 @@ import index from "../utils"
 
 export default function Board() {
 
-    const { boards, setBoards, showSidebar, deleteBoard, setDeleteBoard, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails } = useOutletContext<TBoardPage>()
+    const { boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails } = useOutletContext<TBoardPage>()
 
     const { getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleChangeIsCompleted, handleChangeStatus, handleDeleteTask } = index({ paramsBoard, setBoards, boards })
-    
+
     const [showDotMenu, setShowDotMenu] = useState(false)
     const { H4, H3, H2, P1 } = tailwind()
 
@@ -17,12 +17,6 @@ export default function Board() {
 
     return (
         <div className={`flex p-[24px] gap-[24px] transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>
-            {showDetails || deleteBoard ? <div onClick={() => {
-                setShowDetails(false)
-                setShowDotMenu(false)
-                setShowStatus(false)
-                setDeleteBoard(false)
-            }} className="fixed w-[100%] h-[100%] top-0 left-0 bg-[rgba(0,0,0,0.5)] z-10"></div> : ""}
             <div className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-[32px] bg-[#2B2C37] w-[480px] flex flex-col gap-[24px] rounded-[6px] z-10 ${!showDetails && "hidden"}`}>
                 <div className="flex justify-between items-center relative">
                     <h2 className={`${H2} text-[#FFFFFF]! w-[90%]`}>{task?.title}</h2>

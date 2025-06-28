@@ -11,7 +11,6 @@ export default function Layout() {
   const [showSidebar, setShowSidebar] = useState(false)
   const [boards, setBoards] = useState<TBoard[]>()
   const [showStatus, setShowStatus] = useState(false)
-  const { getTaskByName } = index({})
 
   const { board } = useParams()
 
@@ -34,21 +33,29 @@ export default function Layout() {
 
   const navigate = useNavigate()
 
-  const { register, watch, handleSubmit, unregister } = useForm()
-
-  const task = getTaskByName()
+  const { register, watch, handleSubmit, unregister, reset } = useForm()
 
   const [deleteBoard, setDeleteBoard] = useState(false)
   const [showDotMenu, setShowDotMenu] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+  const [showAddTask, setShowAddTask] = useState(false)
   const [subtasks, setSubtasks] = useState([0])
+  const [status, setStatus] = useState("Choose")
 
   const onSubmit = () => { }
 
-  const { handleChangeStatus, handleDeleteBoard, handleDeleteSubtask } = index({ paramsBoard, boards, setBoards, setSubtasks, subtasks, unregister })
+  const { handleDeleteBoard, handleDeleteSubtask, handleSaveTask } = index({ paramsBoard, boards, setBoards, setSubtasks, subtasks, unregister, watch, reset })
 
   return (
     <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
+      {showDetails || deleteBoard || showAddTask ? <div onClick={() => {
+        setShowDetails(false)
+        setShowDotMenu(false)
+        setShowStatus(false)
+        setDeleteBoard(false)
+        setShowAddTask(false)
+        reset()
+      }} className="fixed w-[100%] h-[100%] top-0 left-0 bg-[rgba(0,0,0,0.5)] z-10"></div> : ""}
       <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-20 rounded-[6px] w-[480px] ${!deleteBoard && "hidden"}`}>
         <h2 className={`${H2} text-[#EA5555]`}>Delete this board?</h2>
         <p className={`${P1} text-[#828FA3]`}>Are you sure you want to delete the {board} board? This action will remove all columns and tasks and cannot be reversed.</p>
@@ -64,16 +71,16 @@ export default function Layout() {
           </button>
         </div>
       </div>
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-20 rounded-[6px] w-[480px]">
+      <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-20 rounded-[6px] w-[480px] ${!showAddTask ? "hidden" : ''}`}>
         <h2 className={`${H2} text-[#FFFFFF]`}>Add New Task</h2>
         <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-[24px]">
           <div className="flex flex-col gap-[8px]">
             <label htmlFor="title" className={`${H4} text-[#FFFFFF]`}>Title</label>
-            <input type="text" id="title" className={`${inputStyle}`} placeholder="e.g. Take coffee break" />
+            <input {...register("title")} type="text" id="title" className={`${inputStyle}`} placeholder="e.g. Take coffee break" />
           </div>
           <div className="flex flex-col gap-[8px]">
             <label htmlFor="description" className={`${H4} text-[#FFFFFF]`}>Description</label>
-            <textarea id="description" className={`${inputStyle} h-[112px]!`} placeholder="e.g. It’s always good to take a break. This 15 minute break will 
+            <textarea {...register("description")} id="description" className={`${inputStyle} h-[112px]!`} placeholder="e.g. It’s always good to take a break. This 15 minute break will 
 recharge the batteries a little." />
           </div>
           <div className="flex flex-col gap-[8px]">
@@ -83,7 +90,7 @@ recharge the batteries a little." />
                 {subtasks.map((e, i) => {
                   return <div key={i} className="flex gap-[16px] items-center">
                     <input {...register(`subtask${e}`)} className={`${inputStyle}`} placeholder="e.g. Make coffee" type="text" />
-                    <svg onClick={() => handleDeleteSubtask(i)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fill-rule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
+                    <svg onClick={() => handleDeleteSubtask(i)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
                   </div>
                 })}
               </div>
@@ -92,15 +99,15 @@ recharge the batteries a little." />
           </div>
         </form>
         <div className="flex flex-col relative gap-[8px]">
-          <h4 className={`${H4} text-[#FFFFFF]`}>Current Status</h4>
+          <h4 className={`${H4} text-[#FFFFFF]`}>Status</h4>
           <div onClick={() => setShowStatus(!showStatus)} className={`cursor-pointer w-[100%] p-[8px_16px] flex justify-between rounded-[4px] border-[1px] border-solid border-[rgba(130,143,163,0.25)] hover:border-[#635FC7] items-center ${P1} text-[#FFFFFF]`}>
-            {task?.status}
+            {status}
             <img src="/images/icon-chevron-down.svg" className={`${showStatus && "rotate-180"} transition-all duration-400`} alt="" />
           </div>
           <div className={`absolute w-[100%] flex flex-col gap-[8px] bg-[#20212C] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] p-[16px] top-[66px] ${!showStatus && "hidden"}`}>
             {paramsBoard?.columns.map((e, i) => {
               return <h5 key={i} onClick={() => {
-                handleChangeStatus(e.name)
+                setStatus(e.name)
                 setShowDetails(false)
                 setShowDotMenu(false)
                 setShowStatus(false)
@@ -108,6 +115,10 @@ recharge the batteries a little." />
             })}
           </div>
         </div>
+        <button onClick={() => {
+          handleSaveTask(status)
+          setShowAddTask(false)
+        }} className={`w-[100%] p-[8px] text-center rounded-[20px] bg-[#635FC7] ${P1} font-[700] text-[#FFFFFF] cursor-pointer`}>Create Task</button>
       </div>
       <div onClick={() => setShowSidebar(true)} className={`p-[19px_22px_19px_18px] cursor-pointer bg-[#635FC7] rounded-[0_100px_100px_0] z-10 transition-all duration-1000 fixed bottom-[5%] left-0 ${showSidebar && "left-[-1000px]"}`}>
         <img src="/images/icon-show-sidebar.svg" alt="" />
@@ -142,13 +153,12 @@ recharge the batteries a little." />
           <div className="p-[24px_32px] items-center w-[100%] flex justify-between">
             <h1 className={`${H1} text-[#FFFFFF]! transition-all duration-1000 ${showSidebar && "ml-[77px]"}`}>Platform Launch</h1>
             <div className="flex gap-[24px] items-center">
-              <button className={`p-[15px_24px] cursor-pointer bg-[#635FC7] rounded-[24px] ${H3} text-[#FFFFFF]`}>
+              <button onClick={() => setShowAddTask(!showAddTask)} className={`p-[15px_24px] cursor-pointer bg-[#635FC7] rounded-[24px] ${H3} text-[#FFFFFF]`}>
                 + Add New Task
               </button>
               <div className="relative">
                 <img className="cursor-pointer" onClick={() => {
                   setShowDotMenu(!showDotMenu)
-
                 }} src="/images/icon-vertical-ellipsis.svg" alt="" />
                 <div className={`absolute ${!showDotMenu && "hidden"} p-[16px] flex flex-col gap-[16px] bg-[#20212C] z-10 shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] top-[50px] right-0`}>
                   <h5 className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Board</h5>
@@ -162,7 +172,7 @@ recharge the batteries a little." />
           </div>
         </div>
       </header>
-      <Outlet context={{ boards, setBoards, showSidebar, deleteBoard, setDeleteBoard, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails }} />
+      <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails }} />
     </div>
   )
 }

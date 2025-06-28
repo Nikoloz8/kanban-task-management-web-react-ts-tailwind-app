@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 
-export default function index({ paramsBoard, boards, setBoards, setSubtasks, unregister, subtasks }: TIndex) {
+export default function index({ paramsBoard, boards, setBoards, reset, setSubtasks, unregister, subtasks, watch }: TIndex) {
 
     const { board } = useParams()
 
@@ -71,6 +71,45 @@ export default function index({ paramsBoard, boards, setBoards, setSubtasks, unr
         handleSaveColumns(filteredColumns)
     }
 
+    const returnTaskObject = (status: string) => {
+        const subtasks = []
+
+        for (let i of Object.keys(watch())) {
+            if (i.includes("subtask")) {
+                const subtaskObj = {
+                    title: watch()[i],
+                    isCompleted: false
+                }
+                subtasks.push(subtaskObj)
+            }
+        }
+
+        const taskObject = {
+            title: watch().title,
+            description: watch().description,
+            status: status,
+            subtasks: subtasks
+        }
+
+        return taskObject
+    }
+
+    const handleSaveTask = (status: string) => {
+        const column = paramsBoard?.columns.find((e) => e.name === status)
+        if (!column) return
+        const editedTasks = column.tasks
+        editedTasks.push(returnTaskObject(status))
+        const EditedColumn = {
+            name: column.name,
+            tasks: editedTasks,
+            color: column.color,
+        }
+        const filteredColumns = paramsBoard?.columns.filter((e) => e.name !== status)
+        filteredColumns?.push(EditedColumn)
+        handleSaveColumns(filteredColumns)
+        reset()
+    }
+
     const handleChangeIsCompleted = (index: number, value: boolean) => {
         const column = getColumnByName()
         const subtasks = getTaskByName()?.subtasks
@@ -88,6 +127,7 @@ export default function index({ paramsBoard, boards, setBoards, setSubtasks, unr
             status: task.status,
             subtasks: updatedSubtasks,
         }
+
 
         const editedTasks = column?.tasks.map((taskItem) =>
             taskItem.title === task.title ? editedTask : taskItem
@@ -147,5 +187,5 @@ export default function index({ paramsBoard, boards, setBoards, setSubtasks, unr
         unregister(`subtask${index}`)
     }
 
-    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask }
+    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask, handleSaveTask }
 }
