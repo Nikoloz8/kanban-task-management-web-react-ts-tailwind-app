@@ -1,23 +1,18 @@
 import { useOutletContext } from "react-router-dom"
 import tailwind from "../style/tailwind"
-import { useState } from "react"
 import index from "../utils"
 
 export default function Board() {
 
-    const { boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails } = useOutletContext<TBoardPage>()
-
+    const { boards, setBoards, showSidebar, setShowStatus,showDotMenu, setShowDotMenu, showStatus, paramsBoard, showDetails, setShowDetails } = useOutletContext<TBoardPage>()
     const { getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleChangeIsCompleted, handleChangeStatus, handleDeleteTask } = index({ paramsBoard, setBoards, boards })
-
-    const [showDotMenu, setShowDotMenu] = useState(false)
     const { H4, H3, H2, P1 } = tailwind()
-
     const task = getTaskByName()
     const sortedColumn = paramsBoard?.columns?.sort((a, b) => a.tasks.length - b.tasks.length)
 
     return (
         <div className={`flex p-[24px] gap-[24px] transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>
-            <div className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-[32px] bg-[#2B2C37] w-[480px] flex flex-col gap-[24px] rounded-[6px] z-10 ${!showDetails && "hidden"}`}>
+            <div className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-[32px] bg-[#2B2C37] w-[480px] flex flex-col gap-[24px] rounded-[6px] z-40 ${!showDetails && "hidden"}`}>
                 <div className="flex justify-between items-center relative">
                     <h2 className={`${H2} text-[#FFFFFF]! w-[90%]`}>{task?.title}</h2>
                     <img onClick={() => setShowDotMenu(!showDotMenu)} className="cursor-pointer" src="/images/icon-vertical-ellipsis.svg" alt="" />

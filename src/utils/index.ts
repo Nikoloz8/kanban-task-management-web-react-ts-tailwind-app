@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 
-export default function index({ paramsBoard, boards, setBoards, reset, setSubtasks, unregister, subtasks, watch }: TIndex) {
+export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch }: TIndex) {
 
     const { board } = useParams()
 
@@ -183,9 +183,38 @@ export default function index({ paramsBoard, boards, setBoards, reset, setSubtas
     }
 
     const handleDeleteSubtask = (index: number) => {
-        setSubtasks!(subtasks!.filter((_e, i) => i !== index))
+        setRenderInputsArr!(renderInputsArr!.filter((_e, i) => i !== index))
         unregister(`subtask${index}`)
     }
 
-    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask, handleSaveTask }
+    const returnBoardObject = () => {
+        const columns = []
+
+        for (let i of Object.keys(watch())) {
+            if (i.includes("column")) {
+                const columnObj = {
+                    name: watch()[i],
+                    tasks: []
+                }
+                columns.push(columnObj)
+            }
+        }
+        const board = {
+            name: watch().boardName,
+            columns
+        }
+        return board
+    }
+
+    const handleSaveBoard = () => {
+        if (!boards) return
+        setBoards!([...boards, returnBoardObject()])
+        setShowAddNewBoard!(false)
+        const boardsForPush = boards
+        boardsForPush.push(returnBoardObject())
+        const stringedBoards = JSON.stringify(boardsForPush)
+        localStorage.setItem("boards", stringedBoards)
+    }
+
+    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveBoard }
 }

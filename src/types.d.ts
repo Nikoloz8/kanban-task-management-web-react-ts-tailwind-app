@@ -26,6 +26,8 @@ type TBoardPage = {
     paramsBoard: TBoard | undefined
     setShowDetails: React.Dispatch<React.SetStateAction<boolean>>
     showDetails: boolean
+    showDotMenu: boolean
+    setShowDotMenu: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
@@ -34,8 +36,10 @@ type TIndex = Partial<{
     setBoards: React.Dispatch<React.SetStateAction<TBoard[] | undefined>>
     boards: TBoard[]
     unregister: UseFormUnregister<FieldValues>
-    setSubtasks: React.Dispatch<React.SetStateAction<number[]>>
-    subtasks: number[]
+    setRenderInputsArr: React.Dispatch<React.SetStateAction<number[]>>
+    renderInputsArr: number[]
     watch: UseFormWatch<FieldValues>
     reset: UseFormReset<FieldValues>
+    setShowAddNewBoard: React.Dispatch<React.SetStateAction<boolean>>
+
 }>
