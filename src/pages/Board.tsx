@@ -1,157 +1,19 @@
-import { useOutletContext, useParams } from "react-router-dom"
+import { useOutletContext } from "react-router-dom"
 import tailwind from "../style/tailwind"
 import { useState } from "react"
+import index from "../utils"
 
 export default function Board() {
-    const { boards, setBoards, showSidebar, deleteBoard, setDeleteBoard } = useOutletContext<TBoardPage>()
-    const { board } = useParams()
-    let paramsBoard: TBoard | undefined;
-    if (boards) {
-        paramsBoard = boards.find(e => e.name === board)
-    }
+
+    const { boards, setBoards, showSidebar, deleteBoard, setDeleteBoard, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails } = useOutletContext<TBoardPage>()
+
+    const { getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleChangeIsCompleted, handleChangeStatus, handleDeleteTask } = index({ paramsBoard, setBoards, boards })
+    
+    const [showDotMenu, setShowDotMenu] = useState(false)
     const { H4, H3, H2, P1 } = tailwind()
 
-    const getSubtasksCompletedCount = (subtasks: undefined | ISubtasks[]) => {
-        let count = 0
-        if (subtasks) {
-            for (let i = 0; i < subtasks?.length; i++) {
-                if (subtasks[i].isCompleted) {
-                    count++
-                }
-            }
-        }
-        return count
-    }
-
-    const storeTaskName = (name: string) => {
-        localStorage.setItem("task name", name)
-    }
-
-    const storeColumnName = (name: string) => {
-        localStorage.setItem("column name", name)
-    }
-
-    const [showDetails, setShowDetails] = useState(false)
-
-    const getColumnByName = () => {
-        const columnName = localStorage.getItem("column name")
-        const column = paramsBoard?.columns.find((e) => e.name === columnName)
-        return column
-    }
-
-    const getTaskByName = () => {
-        const taskName = localStorage.getItem("task name")
-        const column = getColumnByName()
-        if (!column || !Array.isArray(column.tasks)) return undefined
-        return column.tasks.find((e) => e.title === taskName)
-    }
-
-
     const task = getTaskByName()
-
-    const handleSaveColumns = (filteredColumns: any) => {
-        const editedBoard = {
-            name: paramsBoard?.name ?? "",
-            columns: filteredColumns ?? [],
-        }
-
-        const filteredBoards = boards.filter((e) => e.name !== paramsBoard?.name)
-        if (!editedBoard.name || !editedBoard) return
-
-        filteredBoards.push(editedBoard)
-        setBoards(filteredBoards)
-        const stringedBoards = JSON.stringify(filteredBoards)
-        localStorage.setItem("boards", stringedBoards)
-    }
-
-    const handleSaveChangedTasks = (editedTasks: any) => {
-        const column = getColumnByName()
-        const subtasks = getTaskByName()?.subtasks
-        if (!subtasks) return
-        const task = getTaskByName()
-        if (!task || !column) return
-
-        const EditedColumn = {
-            name: column.name,
-            tasks: editedTasks,
-            color: column.color,
-        }
-
-        const filteredColumns = paramsBoard?.columns.filter((e) => e.name !== localStorage.getItem("column name"))
-        filteredColumns?.push(EditedColumn)
-
-        handleSaveColumns(filteredColumns)
-    }
-
-    const handleChangeIsCompleted = (index: number, value: boolean) => {
-        const column = getColumnByName()
-        const subtasks = getTaskByName()?.subtasks
-        if (!subtasks) return
-        const task = getTaskByName()
-        if (!task) return
-
-        const updatedSubtasks = task.subtasks.map((subtask, i) =>
-            i === index ? { ...subtask, isCompleted: value } : subtask
-        )
-
-        const editedTask = {
-            title: task.title,
-            description: task.description,
-            status: task.status,
-            subtasks: updatedSubtasks,
-        }
-
-        const editedTasks = column?.tasks.map((taskItem) =>
-            taskItem.title === task.title ? editedTask : taskItem
-        )
-
-        handleSaveChangedTasks(editedTasks)
-
-    }
-
-
-    const handleDeleteTask = () => {
-        const tasks = getColumnByName()?.tasks
-        const filteredTasks = tasks?.filter((e) => e.title !== task?.title)
-        handleSaveChangedTasks(filteredTasks)
-    }
-
     const sortedColumn = paramsBoard?.columns?.sort((a, b) => a.tasks.length - b.tasks.length)
-
-    const [showDotMenu, setShowDotMenu] = useState(false)
-
-    const handleChangeStatus = (newStatus: string) => {
-        const task = getTaskByName()
-        if (!task) return
-
-        const prevColumn = paramsBoard?.columns.find(col => col.name === task.status)
-        const newColumn = paramsBoard?.columns.find(col => col.name === newStatus)
-        if (!prevColumn || !newColumn) return
-
-        const updatedPrevTasks = prevColumn.tasks.filter(t => t.title !== task.title)
-
-        const updatedTask = {
-            ...task,
-            status: newStatus,
-        }
-
-        const updatedNewTasks = [...newColumn.tasks, updatedTask]
-
-        const updatedColumns = paramsBoard?.columns.map(col => {
-            if (col.name === prevColumn.name) {
-                return { ...col, tasks: updatedPrevTasks }
-            } else if (col.name === newColumn.name) {
-                return { ...col, tasks: updatedNewTasks }
-            } else {
-                return col
-            }
-        })
-
-        handleSaveColumns(updatedColumns)
-    }
-    const [showStatus, setShowStatus] = useState(false)
-
-
 
     return (
         <div className={`flex p-[24px] gap-[24px] transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>

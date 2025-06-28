@@ -3,12 +3,22 @@ import tailwind from "../style/tailwind"
 import data from "../data.json"
 import { Outlet, useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
+import index from "../utils"
 
 export default function Layout() {
 
   const { H1, H3, H4, P1, H2, inputStyle } = tailwind()
   const [showSidebar, setShowSidebar] = useState(false)
   const [boards, setBoards] = useState<TBoard[]>()
+  const [showStatus, setShowStatus] = useState(false)
+  const { getTaskByName } = index({})
+
+  const { board } = useParams()
+
+  let paramsBoard: TBoard | undefined;
+  if (boards) {
+    paramsBoard = boards.find(e => e.name === board)
+  }
 
   useEffect(() => {
     const storedData = localStorage.getItem("boards")
@@ -22,29 +32,20 @@ export default function Layout() {
     }
   }, [])
 
-  const { board } = useParams()
   const navigate = useNavigate()
-
-  const handleDeleteBoard = () => {
-    const filteredBoards = boards?.filter((e) => e.name !== board)
-    setBoards(filteredBoards)
-    const stringedFilteredboards = JSON.stringify(filteredBoards)
-    localStorage.setItem("boards", stringedFilteredboards)
-  }
 
   const { register, watch, handleSubmit, unregister } = useForm()
 
-  console.log(watch())
+  const task = getTaskByName()
 
   const [deleteBoard, setDeleteBoard] = useState(false)
   const [showDotMenu, setShowDotMenu] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
   const [subtasks, setSubtasks] = useState([0])
 
-  const handleDeleteSubtask = (index: number) => {
-    setSubtasks(subtasks.filter((_e, i) => i !== index))
-    unregister(`subtask${index}`)
-  }
   const onSubmit = () => { }
+
+  const { handleChangeStatus, handleDeleteBoard, handleDeleteSubtask } = index({ paramsBoard, boards, setBoards, setSubtasks, subtasks, unregister })
 
   return (
     <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
@@ -91,7 +92,7 @@ recharge the batteries a little." />
           </div>
         </form>
         <div className="flex flex-col relative gap-[8px]">
-          {/* <h4 className={`${H4} text-[#FFFFFF]`}>Current Status</h4>
+          <h4 className={`${H4} text-[#FFFFFF]`}>Current Status</h4>
           <div onClick={() => setShowStatus(!showStatus)} className={`cursor-pointer w-[100%] p-[8px_16px] flex justify-between rounded-[4px] border-[1px] border-solid border-[rgba(130,143,163,0.25)] hover:border-[#635FC7] items-center ${P1} text-[#FFFFFF]`}>
             {task?.status}
             <img src="/images/icon-chevron-down.svg" className={`${showStatus && "rotate-180"} transition-all duration-400`} alt="" />
@@ -105,7 +106,7 @@ recharge the batteries a little." />
                 setShowStatus(false)
               }} className={`${P1} text-[#828FA3] cursor-pointer`}>{e.name}</h5>
             })}
-          </div> */}
+          </div>
         </div>
       </div>
       <div onClick={() => setShowSidebar(true)} className={`p-[19px_22px_19px_18px] cursor-pointer bg-[#635FC7] rounded-[0_100px_100px_0] z-10 transition-all duration-1000 fixed bottom-[5%] left-0 ${showSidebar && "left-[-1000px]"}`}>
@@ -161,7 +162,7 @@ recharge the batteries a little." />
           </div>
         </div>
       </header>
-      <Outlet context={{ boards, setBoards, showSidebar, deleteBoard, setDeleteBoard }} />
+      <Outlet context={{ boards, setBoards, showSidebar, deleteBoard, setDeleteBoard, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails }} />
     </div>
   )
 }
