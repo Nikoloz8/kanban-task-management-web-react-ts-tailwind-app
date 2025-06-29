@@ -17,6 +17,15 @@ type TBoard = {
     }[]
 }
 
+type TUseForm = {
+    [key: `column${number}`]: string
+    boardName: string,
+    title: string,
+    description: string,
+    [key: `subtask${number}`]: string
+
+}
+
 type TBoardPage = {
     boards: TBoard[]
     setBoards: React.Dispatch<React.SetStateAction<TBoard[] | undefined>>

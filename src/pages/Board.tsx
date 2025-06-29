@@ -6,7 +6,7 @@ export default function Board() {
 
     const { boards, setBoards, showSidebar, setShowStatus,showDotMenu, setShowDotMenu, showStatus, paramsBoard, showDetails, setShowDetails } = useOutletContext<TBoardPage>()
     const { getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleChangeIsCompleted, handleChangeStatus, handleDeleteTask } = index({ paramsBoard, setBoards, boards })
-    const { H4, H3, H2, P1 } = tailwind()
+    const { H4, H3, H2, P1, H1 } = tailwind()
     const task = getTaskByName()
     const sortedColumn = paramsBoard?.columns?.sort((a, b) => a.tasks.length - b.tasks.length)
 
@@ -72,6 +72,7 @@ export default function Board() {
                     </div>
                 </div>
             })}
+            <div className={`w-[280px] h-[100vh] mt-[34px] cursor-pointer bg-[rgba(43,44,55,0.5)] rounded-[6px] ${H1} text-[#828FA3] flex items-center justify-center`}>+ New Column</div>
         </div>
     )
 }

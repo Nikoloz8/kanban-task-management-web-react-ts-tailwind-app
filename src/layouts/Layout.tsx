@@ -9,7 +9,6 @@ export default function Layout() {
 
   const { H1, H3, H4, P1, H2, inputStyle } = tailwind()
   const { board } = useParams()
-  const { register, watch, handleSubmit, unregister, reset } = useForm()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export default function Layout() {
   const [showDetails, setShowDetails] = useState(false)
   const [boards, setBoards] = useState<TBoard[]>()
   const [showAddTask, setShowAddTask] = useState(false)
-  const [renderInputsArr, setRenderInputsArr] = useState([0])
+  const [renderInputsArr, setRenderInputsArr] = useState<number[]>([])
   const [status, setStatus] = useState("Choose")
   const [showAddNewBoard, setShowAddNewBoard] = useState(false)
 
@@ -41,9 +40,29 @@ export default function Layout() {
     paramsBoard = boards.find(e => e.name === board)
   }
 
+  const { register, watch, handleSubmit, unregister, reset } = useForm<TUseForm>();
+
+  const columnDefaults: any = {}
+
+  useEffect(() => {
+    if (paramsBoard) {
+      paramsBoard.columns?.forEach((col, i) => {
+        columnDefaults[`column${i}`] = col.name
+      })
+
+      reset({
+        boardName: paramsBoard.name,
+        ...columnDefaults
+      })
+    }
+  }, [paramsBoard])
+
+
   const { handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveBoard } = index({ paramsBoard, boards, setBoards, setRenderInputsArr, renderInputsArr, unregister, watch, setShowAddNewBoard, reset })
 
   const onSubmit = () => { }
+
+  console.log(watch())
 
 
   return (
@@ -74,7 +93,7 @@ export default function Layout() {
         </div>
       </div>
       <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${!showAddNewBoard && "hidden!"}`}>
-        <h2 className={`${H2} text-[#FFFFFF]`}>Add New Task</h2>
+        <h2 className={`${H2} text-[#FFFFFF]`}>Add New Board</h2>
         <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-[24px]">
           <div className="flex flex-col gap-[8px]">
             <label htmlFor="boardName" className={`${H4} text-[#FFFFFF]`}>Board Name</label>
@@ -97,6 +116,7 @@ export default function Layout() {
           <button onClick={() => handleSaveBoard()} className={`w-[100%] p-[8px] text-center rounded-[20px] bg-[#635FC7] ${P1} font-[700] text-[#FFFFFF] cursor-pointer`}>Create New Board</button>
         </form>
       </div>
+
       <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${!showAddTask ? "hidden" : ''}`}>
         <h2 className={`${H2} text-[#FFFFFF]`}>Add New Task</h2>
         <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-[24px]">
