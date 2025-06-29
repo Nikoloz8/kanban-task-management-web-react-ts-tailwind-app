@@ -22,7 +22,9 @@ type TUseForm = {
     boardName: string,
     title: string,
     description: string,
+    [key: `subtaskDefault${number}`]: string
     [key: `subtask${number}`]: string
+
 
 }
 

@@ -43,6 +43,7 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
             columns: filteredColumns ?? [],
         }
 
+
         const filteredBoards = boards?.filter((e) => e.name !== paramsBoard?.name)
         if (!editedBoard.name || !editedBoard) return
 
@@ -71,11 +72,10 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
         handleSaveColumns(filteredColumns)
     }
 
-    const returnTaskObject = (status: string) => {
+    const returnSubtastks = (subtaskName: string) => {
         const subtasks = []
-
         for (let i of Object.keys(watch())) {
-            if (i.includes("subtask")) {
+            if (i.includes(subtaskName)) {
                 const subtaskObj = {
                     title: watch()[i],
                     isCompleted: false
@@ -84,11 +84,16 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
             }
         }
 
+        return subtasks
+    }
+
+    const returnTaskObject = (status: string) => {
+
         const taskObject = {
             title: watch().title,
             description: watch().description,
             status: status,
-            subtasks: subtasks
+            subtasks: returnSubtastks("subtask")
         }
 
         return taskObject
@@ -216,5 +221,5 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
         localStorage.setItem("boards", stringedBoards)
     }
 
-    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveBoard }
+    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveBoard, returnSubtastks, returnTaskObject }
 }
