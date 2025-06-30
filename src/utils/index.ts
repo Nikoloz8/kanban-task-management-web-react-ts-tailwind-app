@@ -53,8 +53,14 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
         localStorage.setItem("boards", stringedBoards)
     }
 
-    const handleSaveChangedTasks = (editedTasks: any) => {
-        const column = getColumnByName()
+    const handleSaveChangedTasks = (editedTasks: any, columnName?: string) => {
+        let column
+        if (columnName) {
+            column = paramsBoard?.columns?.find((e) => e.name === columnName)
+        } else {
+            column = getColumnByName()
+        }
+
         const subtasks = getTaskByName()?.subtasks
         if (!subtasks) return
         const task = getTaskByName()
@@ -66,7 +72,7 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
             color: column.color,
         }
 
-        const filteredColumns = paramsBoard?.columns.filter((e) => e.name !== localStorage.getItem("column name"))
+        const filteredColumns = paramsBoard?.columns.filter((e) => e.name !== column.name)
         filteredColumns?.push(EditedColumn)
 
         handleSaveColumns(filteredColumns)
@@ -75,7 +81,7 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
     const returnSubtastks = (subtaskName: string) => {
         const subtasks = []
         for (let i of Object.keys(watch())) {
-            if (i.includes(subtaskName)) {
+            if (i.startsWith(subtaskName)) {
                 const subtaskObj = {
                     title: watch()[i],
                     isCompleted: false

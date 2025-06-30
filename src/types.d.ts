@@ -39,6 +39,8 @@ type TBoardPage = {
     showDetails: boolean
     showDotMenu: boolean
     setShowDotMenu: React.Dispatch<React.SetStateAction<boolean>>
+    setShowEditTask: React.Dispatch<React.SetStateAction<boolean>>
+    showEditTask: boolean
 }
 
 

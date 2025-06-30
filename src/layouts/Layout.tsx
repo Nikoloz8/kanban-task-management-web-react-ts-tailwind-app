@@ -34,16 +34,17 @@ export default function Layout() {
   const [status, setStatus] = useState("Choose")
   const [renderInputsArr, setRenderInputsArr] = useState<number[]>([])
   const [showAddNewBoard, setShowAddNewBoard] = useState(false)
+  const [showEditTask, setShowEditTask] = useState(false)
 
   let paramsBoard: TBoard | undefined
   if (boards) {
     paramsBoard = boards.find(e => e.name === board)
   }
 
-  const { register, watch, handleSubmit, unregister, reset } = useForm<TUseForm>();
+  const { register, watch, handleSubmit, unregister, reset } = useForm<TUseForm>({ shouldUnregister: true })
 
 
-  const { handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveChangedTasks, handleSaveBoard, getColumnByName, getTaskByName, returnSubtastks } = index({ paramsBoard, boards, setBoards, setRenderInputsArr, renderInputsArr, unregister, watch, setShowAddNewBoard, reset })
+  const { handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveChangedTasks, handleSaveBoard, getColumnByName, getTaskByName, returnSubtastks, handleChangeStatus } = index({ paramsBoard, boards, setBoards, setRenderInputsArr, renderInputsArr, unregister, watch, setShowAddNewBoard, reset })
 
   const columnDefaults: any = {}
   const subtaskDefaultValues: any = {}
@@ -84,34 +85,43 @@ export default function Layout() {
     } else {
       realStatus = getTaskByName()!.status
     }
-    const column = paramsBoard?.columns.find((e) => e.name === realStatus)
+    const column = paramsBoard?.columns.find((e) => e.name === getTaskByName()?.status)
     if (!column) return
 
-    const title = getTaskByName()!.title
+    const title = watch().title
+    console.log(column.tasks)
     const editedTasks = column.tasks.filter((e) => e.title !== task?.title)
 
     const subtasks = []
     const values = watch() as Record<string, any>;
 
+    if (task?.title !== status) {
+      handleChangeStatus(status)
+    }
+
     for (let key of Object.keys(values)) {
-      if (key.includes("subtask")) {
+      if (key.startsWith("subtask")) {
         subtasks.push({
           title: values[key],
           isCompleted: false
         })
       }
     }
-
-    editedTasks.push({ title, description: watch().description, status: realStatus, subtasks })
     handleSaveChangedTasks(editedTasks)
-
+    const statusTasks = paramsBoard?.columns.find((e) => e.name === status)?.tasks
+    const filteredStatusTasks = statusTasks?.filter(e => e.title !== task?.title)
+    filteredStatusTasks?.push({ title, description: watch().description, status: realStatus, subtasks })
+    handleSaveChangedTasks(filteredStatusTasks)
+    handleChangeStatus(status)
     reset()
+    setShowEditTask(false)
   }
 
   return (
     <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
-      {showDetails || deleteBoard || showAddTask || showAddNewBoard ? <div onClick={() => {
+      {showDetails || deleteBoard || showAddTask || showAddNewBoard || showEditTask ? <div onClick={() => {
         setShowDetails(false)
+        setShowEditTask(false)
         setShowDotMenu(false)
         setShowStatus(false)
         setDeleteBoard(false)
@@ -210,7 +220,7 @@ recharge the batteries a little." />
         }} className={`w-[100%] p-[8px] text-center rounded-[20px] bg-[#635FC7] ${P1} font-[700] text-[#FFFFFF] cursor-pointer`}>Create Task</button>
       </div>
 
-      <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] w-[480px]`}>
+      <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] hidden flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${showEditTask && "flex!"}`}>
         <h2 className={`${H2} text-[#FFFFFF]`}>Edit Task</h2>
         <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-[24px]">
           <div className="flex flex-col gap-[8px]">
@@ -229,7 +239,11 @@ recharge the batteries a little." />
                 {returnSubtastks("subtaskDefault").map((_e, i) => {
                   return <div key={i} className="flex gap-[16px] items-center">
                     <input {...register(`subtaskDefault${i}`)} className={`${inputStyle}`} placeholder="e.g. Make coffee" type="text" />
-                    <svg onClick={() => handleDeleteSubtask(i)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
+                    <svg onClick={() => {
+                      handleDeleteSubtask(i)
+                      unregister(`subtaskDefault${i}`)
+                    }
+                    } width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
                   </div>
                 })}
                 {renderInputsArr.map((_e, i) => {
@@ -320,7 +334,7 @@ recharge the batteries a little." />
           </div>
         </div>
       </header>
-      <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, showDotMenu, setShowDotMenu }} />
+      <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask }} />
     </div>
   )
 }

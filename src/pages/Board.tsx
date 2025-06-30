@@ -4,7 +4,7 @@ import index from "../utils"
 
 export default function Board() {
 
-    const { boards, setBoards, showSidebar, setShowStatus,showDotMenu, setShowDotMenu, showStatus, paramsBoard, showDetails, setShowDetails } = useOutletContext<TBoardPage>()
+    const { boards, setBoards, showSidebar, setShowStatus,showDotMenu, setShowDotMenu, showStatus, paramsBoard, showDetails, setShowDetails, setShowEditTask, showEditTask } = useOutletContext<TBoardPage>()
     const { getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleChangeIsCompleted, handleChangeStatus, handleDeleteTask } = index({ paramsBoard, setBoards, boards })
     const { H4, H3, H2, P1, H1 } = tailwind()
     const task = getTaskByName()
@@ -17,7 +17,10 @@ export default function Board() {
                     <h2 className={`${H2} text-[#FFFFFF]! w-[90%]`}>{task?.title}</h2>
                     <img onClick={() => setShowDotMenu(!showDotMenu)} className="cursor-pointer" src="/images/icon-vertical-ellipsis.svg" alt="" />
                     <div className={`absolute p-[16px] flex flex-col gap-[16px] bg-[#20212C] shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] right-[-80px] bottom-[-110px] ${!showDotMenu && "hidden"}`}>
-                        <h5 className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Task</h5>
+                        <h5 onClick={() => {
+                            setShowEditTask(!showEditTask)
+                            setShowDetails(false)
+                            }} className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Task</h5>
                         <h5 onClick={() => {
                             handleDeleteTask()
                             setShowDetails(false)
