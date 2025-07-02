@@ -64,3 +64,39 @@ type TIndex = Partial<{
     setShowDotMenu: React.Dispatch<React.SetStateAction<boolean>>
     setShowEditTask: React.Dispatch<React.SetStateAction<boolean>>
 }>
+
+type TContext = {
+    showDetails: boolean
+    deleteBoard: boolean
+    showAddTask: boolean
+    showAddNewBoard: boolean
+    showEditTask: boolean
+    setShowDetails: React.Dispatch<React.SetStateAction<boolean>>
+    setShowEditTask: React.Dispatch<React.SetStateAction<boolean>>
+    setShowDotMenu: React.Dispatch<React.SetStateAction<boolean>>
+    setShowStatus: React.Dispatch<React.SetStateAction<boolean>>
+    setDeleteBoard: React.Dispatch<React.SetStateAction<boolean>>
+    setShowAddTask: React.Dispatch<React.SetStateAction<boolean>>
+    setShowDotMenuHeader: React.Dispatch<React.SetStateAction<boolean>>
+    setShowAddNewBoard: React.Dispatch<React.SetStateAction<boolean>>
+    reset: UseFormReset<FieldValues>
+    setDeleteBoard: React.Dispatch<React.SetStateAction<boolean>>
+    setBoards: React.Dispatch<React.SetStateAction<TBoard[] | undefined>>
+    boards: TBoard[] | undefined
+    deleteBoard: React.Dispatch<React.SetStateAction<boolean>>
+    board: string | undefined
+    setRenderInputsArr: React.Dispatch<React.SetStateAction<number[]>>
+    renderInputsArr: number[]
+    handleSubmit: UseFormHandleSubmit<TUseForm, TUseForm>
+    register: UseFormRegister<TUseForm>
+    onSubmit: () => void
+    unregister: UseFormUnregister<FieldValues>
+    showStatus: boolean
+    setStatus: React.Dispatch<React.SetStateAction<string>>
+    status: string
+    paramsBoard: TBoard | undefined
+    watch: UseFormWatch<FieldValues>
+    setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>
+    showSidebar: boolean
+    showDotMenuHeader: boolean
+}
