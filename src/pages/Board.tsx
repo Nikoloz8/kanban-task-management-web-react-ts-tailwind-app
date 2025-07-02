@@ -8,6 +8,7 @@ export default function Board() {
     const { getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleChangeIsCompleted, handleChangeStatus, handleDeleteTask } = index({ paramsBoard, setBoards, boards })
     const { H4, H3, H2, P1, H1 } = tailwind()
     const task = getTaskByName()
+    console.log(paramsBoard?.columns)
     const sortedColumn = paramsBoard?.columns?.sort((a, b) => a.tasks.length - b.tasks.length)
 
     return (

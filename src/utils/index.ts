@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 
-export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch }: TIndex) {
+export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch, setShowEditTask, setShowDotMenu }: TIndex) {
 
     const { board } = useParams()
 
@@ -78,13 +78,15 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
         handleSaveColumns(filteredColumns)
     }
 
-    const returnSubtastks = (subtaskName: string) => {
+    const returnSubtasks = (subtaskName: string) => {
         const subtasks = []
         for (let i of Object.keys(watch())) {
+            const index = parseInt(i.replace(subtaskName, ""), 10)
             if (i.startsWith(subtaskName)) {
                 const subtaskObj = {
                     title: watch()[i],
-                    isCompleted: false
+                    isCompleted: false,
+                    id: index
                 }
                 subtasks.push(subtaskObj)
             }
@@ -99,7 +101,7 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
             title: watch().title,
             description: watch().description,
             status: status,
-            subtasks: returnSubtastks("subtask")
+            subtasks: returnSubtasks("subtask")
         }
 
         return taskObject
@@ -227,5 +229,48 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
         localStorage.setItem("boards", stringedBoards)
     }
 
-    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveBoard, returnSubtastks, returnTaskObject }
+    const handleEditTask = () => {
+        const originalTask = getTaskByName()
+        if (!originalTask || !paramsBoard) return
+        const values = watch() as Record<string, any>
+        const newTitle = values.title?.trim()
+        const newDescription = values.description?.trim()
+        const newStatus = status !== "Choose" ? status : originalTask.status
+        const currentColumn = paramsBoard.columns.find(col => col.name === originalTask.status)
+        const targetColumn = paramsBoard.columns.find(col => col.name === newStatus)
+        if (!currentColumn || !targetColumn) return
+        const subtasks: ISubtasks[] = []
+        Object.keys(values).forEach(key => {
+            if (key.startsWith("subtask") || key.startsWith("subtaskDefault")) {
+                const title = values[key]?.trim()
+                if (title) {
+                    subtasks.push({ title, isCompleted: false })
+                }
+            }
+        })
+        const updatedTask: ITask = {
+            title: newTitle || originalTask.title,
+            description: newDescription || "",
+            status: newStatus,
+            subtasks,
+        }
+        const updatedColumns = paramsBoard.columns.map(col => {
+            if (col.name === currentColumn.name) {
+                const filteredTasks = col.tasks.filter(t => t.title !== originalTask.title)
+                return newStatus === originalTask.status
+                    ? { ...col, tasks: [...filteredTasks, updatedTask] }
+                    : { ...col, tasks: filteredTasks }
+            }
+            if (col.name === targetColumn.name && newStatus !== originalTask.status) {
+                return { ...col, tasks: [...col.tasks, updatedTask] }
+            }
+            return col
+        })
+        handleSaveColumns(updatedColumns)
+        setShowEditTask!(false)
+        setShowDotMenu!(false)
+        reset()
+    }
+
+    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveBoard, returnSubtasks, returnTaskObject, handleEditTask }
 }

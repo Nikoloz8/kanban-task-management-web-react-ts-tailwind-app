@@ -44,7 +44,7 @@ export default function Layout() {
   const { register, watch, handleSubmit, unregister, reset } = useForm<TUseForm>({ shouldUnregister: true })
 
 
-  const { handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveChangedTasks, handleSaveBoard, getColumnByName, getTaskByName, returnSubtastks, handleChangeStatus } = index({ paramsBoard, boards, setBoards, setRenderInputsArr, renderInputsArr, unregister, watch, setShowAddNewBoard, reset })
+  const { handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveBoard, getColumnByName, getTaskByName, returnSubtasks, handleEditTask } = index({ paramsBoard, boards, setBoards, setRenderInputsArr, renderInputsArr, unregister, watch, setShowAddNewBoard, reset, setShowDotMenu, setShowEditTask })
 
   const columnDefaults: any = {}
   const subtaskDefaultValues: any = {}
@@ -77,45 +77,6 @@ export default function Layout() {
 
   const onSubmit = () => { }
 
-  const handleEditTask = () => {
-    const task = getTaskByName()
-    let realStatus
-    if (status !== "Choose") {
-      realStatus = status
-    } else {
-      realStatus = getTaskByName()!.status
-    }
-    const column = paramsBoard?.columns.find((e) => e.name === getTaskByName()?.status)
-    if (!column) return
-
-    const title = watch().title
-    console.log(column.tasks)
-    const editedTasks = column.tasks.filter((e) => e.title !== task?.title)
-
-    const subtasks = []
-    const values = watch() as Record<string, any>;
-
-    if (task?.title !== status) {
-      handleChangeStatus(status)
-    }
-
-    for (let key of Object.keys(values)) {
-      if (key.startsWith("subtask")) {
-        subtasks.push({
-          title: values[key],
-          isCompleted: false
-        })
-      }
-    }
-    handleSaveChangedTasks(editedTasks)
-    const statusTasks = paramsBoard?.columns.find((e) => e.name === status)?.tasks
-    const filteredStatusTasks = statusTasks?.filter(e => e.title !== task?.title)
-    filteredStatusTasks?.push({ title, description: watch().description, status: realStatus, subtasks })
-    handleSaveChangedTasks(filteredStatusTasks)
-    handleChangeStatus(status)
-    reset()
-    setShowEditTask(false)
-  }
 
   return (
     <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
@@ -236,7 +197,7 @@ recharge the batteries a little." />
             <label htmlFor="" className={`${H4} text-[#FFFFFF]`}>Subtasks</label>
             <div className="flex flex-col gap-[12px]">
               <div className="flex flex-col gap-[12px] overflow-y-auto max-h-[20vh]!">
-                {returnSubtastks("subtaskDefault").map((_e, i) => {
+                {returnSubtasks("subtaskDefault").map((_e, i) => {
                   return <div key={i} className="flex gap-[16px] items-center">
                     <input {...register(`subtaskDefault${i}`)} className={`${inputStyle}`} placeholder="e.g. Make coffee" type="text" />
                     <svg onClick={() => {

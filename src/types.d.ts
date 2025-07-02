@@ -3,6 +3,13 @@ interface ISubtasks {
     isCompleted: boolean
 }[]
 
+interface ITask {
+    title: string,
+    description: string,
+    status: string,
+    subtasks: ISubtasks[]
+}
+
 type TBoard = {
     name: string,
     columns: {
@@ -54,5 +61,6 @@ type TIndex = Partial<{
     watch: UseFormWatch<FieldValues>
     reset: UseFormReset<FieldValues>
     setShowAddNewBoard: React.Dispatch<React.SetStateAction<boolean>>
-
+    setShowDotMenu: React.Dispatch<React.SetStateAction<boolean>>
+    setShowEditTask: React.Dispatch<React.SetStateAction<boolean>>
 }>
