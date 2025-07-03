@@ -99,7 +99,7 @@ export default function Layout() {
         <Header />
 
         <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask }} />
-      
+
       </context.Provider>
     </div>
   )
