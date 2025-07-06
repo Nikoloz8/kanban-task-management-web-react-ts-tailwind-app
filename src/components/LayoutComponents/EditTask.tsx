@@ -12,7 +12,7 @@ export default function EditTask() {
 
     const { H2, inputStyle, H4, P1 } = tailwind()
 
-    const { returnSubtasks, handleDeleteSubtask, getColumnByName, handleEditTask } = index({ watch, setRenderInputsArr, unregister, paramsBoard, setShowEditTask, setShowDotMenu, status, boards, setBoards, reset })
+    const { returnSubtasks, handleDeleteSubtask, getColumnByName, handleEditTask } = index({ watch, setRenderInputsArr, unregister, paramsBoard, setShowEditTask, setShowDotMenu, status, boards, setBoards, reset, renderInputsArr })
 
     return (
         <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] hidden flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${showEditTask && "flex!"}`}>
@@ -20,11 +20,11 @@ export default function EditTask() {
             <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-[24px]">
                 <div className="flex flex-col gap-[8px]">
                     <label htmlFor="title" className={`${H4} text-[#FFFFFF]`}>Title</label>
-                    <input {...register("title")} type="text" id="title" className={`${inputStyle}`} placeholder="e.g. Take coffee break" />
+                    <input {...register("editableTitle")} type="text" id="title" className={`${inputStyle}`} placeholder="e.g. Take coffee break" />
                 </div>
                 <div className="flex flex-col gap-[8px]">
                     <label htmlFor="description" className={`${H4} text-[#FFFFFF]`}>Description</label>
-                    <textarea {...register("description")} id="description" className={`${inputStyle} h-[112px]!`} placeholder="e.g. It’s always good to take a break. This 15 minute break will 
+                    <textarea {...register("editableDescription")} id="description" className={`${inputStyle} h-[112px]!`} placeholder="e.g. It’s always good to take a break. This 15 minute break will 
 recharge the batteries a little." />
                 </div>
                 <div className="flex flex-col gap-[8px]">

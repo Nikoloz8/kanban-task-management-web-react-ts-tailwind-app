@@ -94,22 +94,22 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
         return subtasks
     }
 
-    const returnTaskObject = (argumentStatus: string) => {
+    const returnTaskObject = (argumentStatus: string, TType: string, DType: string, SType: string) => {
         const taskObject = {
-            title: watch().newTaskTitle,
-            description: watch().newTaskDescription,
+            title: watch()[TType],
+            description: watch()[DType],
             status: argumentStatus,
-            subtasks: returnSubtasks("newTaskSubtask")
+            subtasks: returnSubtasks(SType)
         }
 
         return taskObject
     }
 
-    const handleSaveTask = (argumentStatus: string) => {
+    const handleSaveTask = (argumentStatus: string, TType: string, DType: string, SType: string) => {
         const column = paramsBoard?.columns.find((e) => e.name === argumentStatus)
         if (!column) return
         const editedTasks = column.tasks
-        editedTasks.push(returnTaskObject(argumentStatus))
+        editedTasks.push(returnTaskObject(argumentStatus, TType, DType, SType))
         const EditedColumn = {
             name: column.name,
             tasks: editedTasks,
@@ -231,8 +231,8 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
         const originalTask = getTaskByName()
         if (!originalTask || !paramsBoard) return
         const values = watch() as Record<string, any>
-        const newTitle = values.title?.trim()
-        const newDescription = values.description?.trim()
+        const newTitle = values.editableTitle?.trim()
+        const newDescription = values.editableDescription?.trim()
         const newStatus = status !== "Choose" ? status : originalTask.status
         const currentColumn = paramsBoard.columns.find(col => col.name === originalTask.status)
         const targetColumn = paramsBoard.columns.find(col => col.name === newStatus)

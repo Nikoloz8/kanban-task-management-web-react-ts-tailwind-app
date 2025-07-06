@@ -58,7 +58,7 @@ recharge the batteries a little." />
                 </div>
             </div>
             <button onClick={() => {
-                handleSaveTask(status)
+                handleSaveTask(status, "newTaskTitle", "newTaskDescription", "newTaskSubtask")
                 setShowAddTask(false)
                 setRenderInputsArr([0])
             }} className={`w-[100%] p-[8px] text-center rounded-[20px] bg-[#635FC7] ${P1} font-[700] text-[#FFFFFF] cursor-pointer`}>Create Task</button>

@@ -67,13 +67,13 @@ export default function Layout() {
           subtaskDefaultValues[`subtaskDefault${i}`] = sub.title
         })
       }
-      if (showAddTask) {
+      if (!showAddTask) {
         reset({
           boardName: paramsBoard.name,
           ...columnDefaults,
           ...subtaskDefaultValues,
-          title: task?.title,
-          description: task?.description
+          editableTitle: task?.title,
+          editableDescription: task?.description
         })
       }
     }
