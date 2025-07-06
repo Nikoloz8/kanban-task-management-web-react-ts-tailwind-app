@@ -7,9 +7,9 @@ export default function NewBoard() {
 
     const ctx = useContext(context)
     if (!ctx) return null
-    const { handleSubmit, register, renderInputsArr, showAddNewBoard, onSubmit, setRenderInputsArr, boards, setShowAddNewBoard, setBoards, unregister } = ctx
+    const { handleSubmit, register, renderInputsArr, showAddNewBoard, onSubmit, setRenderInputsArr, watch, boards, setShowAddNewBoard, setBoards, unregister } = ctx
     const { H2, H4, P1, inputStyle } = tailwind()
-    const {handleDeleteSubtask, handleSaveBoard} = index({setRenderInputsArr, unregister, boards, setBoards, setShowAddNewBoard})
+    const {handleDeleteSubtask, handleSaveBoard} = index({setRenderInputsArr, unregister, boards, watch, setBoards, setShowAddNewBoard})
 
     return (
         <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${!showAddNewBoard && "hidden!"}`}>

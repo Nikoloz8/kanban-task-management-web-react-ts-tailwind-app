@@ -67,7 +67,7 @@ export default function Layout() {
           subtaskDefaultValues[`subtaskDefault${i}`] = sub.title
         })
       }
-      if (!showAddTask) {
+      if (showAddTask) {
         reset({
           boardName: paramsBoard.name,
           ...columnDefaults,
@@ -82,6 +82,7 @@ export default function Layout() {
 
   const onSubmit = () => { }
 
+  console.log(watch())
 
   return (
     <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
