@@ -8,11 +8,11 @@ export default function EditTask() {
     const ctx = useContext(context)
     if (!ctx) return
 
-    const { handleSubmit, register, showEditTask, onSubmit, unregister, renderInputsArr, setRenderInputsArr, setShowStatus, showStatus, setShowDetails, setStatus, setShowDotMenu, paramsBoard, setShowEditTask, reset, watch } = ctx
+    const { handleSubmit, register, showEditTask, onSubmit, unregister, renderInputsArr, setRenderInputsArr, setShowStatus, showStatus, setShowDetails, setStatus, setShowDotMenu, status, boards, paramsBoard, setShowEditTask, reset, watch, setBoards } = ctx
 
     const { H2, inputStyle, H4, P1 } = tailwind()
 
-    const {returnSubtasks, handleDeleteSubtask, getColumnByName, handleEditTask} = index({watch, setRenderInputsArr, unregister, paramsBoard, setShowEditTask, setShowDotMenu, reset})
+    const { returnSubtasks, handleDeleteSubtask, getColumnByName, handleEditTask } = index({ watch, setRenderInputsArr, unregister, paramsBoard, setShowEditTask, setShowDotMenu, status, boards, setBoards, reset })
 
     return (
         <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] hidden flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${showEditTask && "flex!"}`}>

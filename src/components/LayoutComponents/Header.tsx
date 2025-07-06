@@ -7,7 +7,7 @@ export default function Header() {
 
     const ctx = useContext(context)
     if (!ctx) return
-    const { boards, setShowAddNewBoard, showAddNewBoard, setShowSidebar, showSidebar, showDotMenuHeader, setShowAddTask, showAddTask, setShowDotMenuHeader, setDeleteBoard, board } = ctx
+    const { boards, setShowAddNewBoard, showAddNewBoard, setShowSidebar, showSidebar, showDotMenuHeader, setShowAddTask, showAddTask, setShowDotMenuHeader, setDeleteBoard, board, reset, watch } = ctx
 
     const { H4, H3, H1, P1 } = tailwind()
 
@@ -48,7 +48,11 @@ export default function Header() {
                 <div className="p-[24px_32px] items-center w-[100%] flex justify-between">
                     <h1 className={`${H1} text-[#FFFFFF]! transition-all duration-1000 ${showSidebar && "ml-[77px]"}`}>Platform Launch</h1>
                     <div className="flex gap-[24px] items-center">
-                        <button onClick={() => setShowAddTask(!showAddTask)} className={`p-[15px_24px] cursor-pointer bg-[#635FC7] rounded-[24px] ${H3} text-[#FFFFFF]`}>
+                        <button onClick={() => {
+                            setShowAddTask(!showAddTask)
+                            console.log(reset)
+                            reset(watch())
+                        }} className={`p-[15px_24px] cursor-pointer bg-[#635FC7] rounded-[24px] ${H3} text-[#FFFFFF]`}>
                             + Add New Task
                         </button>
                         <div className="relative">

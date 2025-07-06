@@ -6,7 +6,7 @@ interface ISubtasks {
 interface ITask {
     title: string,
     description: string,
-    status: string,
+    status: string | undefined,
     subtasks: ISubtasks[]
 }
 
@@ -55,6 +55,7 @@ type TIndex = Partial<{
     paramsBoard: TBoard | undefined
     setBoards: React.Dispatch<React.SetStateAction<TBoard[] | undefined>>
     boards: TBoard[]
+    status: string
     unregister: UseFormUnregister<FieldValues>
     setRenderInputsArr: React.Dispatch<React.SetStateAction<number[]>>
     renderInputsArr: number[]

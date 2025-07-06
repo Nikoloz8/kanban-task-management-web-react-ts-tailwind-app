@@ -38,7 +38,7 @@ export default function Layout() {
   const [boards, setBoards] = useState<TBoard[]>()
   const [showAddTask, setShowAddTask] = useState(false)
   const [status, setStatus] = useState("Choose")
-  const [renderInputsArr, setRenderInputsArr] = useState<number[]>([])
+  const [renderInputsArr, setRenderInputsArr] = useState<number[]>([0])
   const [showAddNewBoard, setShowAddNewBoard] = useState(false)
   const [showEditTask, setShowEditTask] = useState(false)
 
@@ -48,7 +48,6 @@ export default function Layout() {
   }
 
   const { register, watch, handleSubmit, unregister, reset } = useForm<TUseForm>({ shouldUnregister: true })
-
 
   const { getTaskByName } = index({ paramsBoard, boards, setBoards, setRenderInputsArr, renderInputsArr, unregister, watch, setShowAddNewBoard, reset, setShowDotMenu, setShowEditTask })
 
@@ -79,6 +78,7 @@ export default function Layout() {
       }
     }
   }, [paramsBoard])
+
 
   const onSubmit = () => { }
 

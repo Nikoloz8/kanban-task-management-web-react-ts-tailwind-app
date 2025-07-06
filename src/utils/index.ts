@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 
-export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch, setShowEditTask, setShowDotMenu }: TIndex) {
+export default function index({ paramsBoard, boards, status, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch, setShowEditTask, setShowDotMenu }: TIndex) {
 
     const { board } = useParams()
 
@@ -42,7 +42,6 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
             name: paramsBoard?.name ?? "",
             columns: filteredColumns ?? [],
         }
-
 
         const filteredBoards = boards?.filter((e) => e.name !== paramsBoard?.name)
         if (!editedBoard.name || !editedBoard) return
@@ -95,29 +94,28 @@ export default function index({ paramsBoard, boards, setShowAddNewBoard, setBoar
         return subtasks
     }
 
-    const returnTaskObject = (status: string) => {
-
+    const returnTaskObject = (argumentStatus: string) => {
         const taskObject = {
-            title: watch().title,
-            description: watch().description,
-            status: status,
-            subtasks: returnSubtasks("subtask")
+            title: watch().newTaskTitle,
+            description: watch().newTaskDescription,
+            status: argumentStatus,
+            subtasks: returnSubtasks("newTaskSubtask")
         }
 
         return taskObject
     }
 
-    const handleSaveTask = (status: string) => {
-        const column = paramsBoard?.columns.find((e) => e.name === status)
+    const handleSaveTask = (argumentStatus: string) => {
+        const column = paramsBoard?.columns.find((e) => e.name === argumentStatus)
         if (!column) return
         const editedTasks = column.tasks
-        editedTasks.push(returnTaskObject(status))
+        editedTasks.push(returnTaskObject(argumentStatus))
         const EditedColumn = {
             name: column.name,
             tasks: editedTasks,
             color: column.color,
         }
-        const filteredColumns = paramsBoard?.columns.filter((e) => e.name !== status)
+        const filteredColumns = paramsBoard?.columns.filter((e) => e.name !== argumentStatus)
         filteredColumns?.push(EditedColumn)
         handleSaveColumns(filteredColumns)
         reset()
