@@ -74,7 +74,7 @@ export default function Layout() {
           ...subtaskDefaultValues,
           editableTitle: task?.title,
           editableDescription: task?.description
-        })
+        }) 
       }
     }
   }, [paramsBoard])
