@@ -41,6 +41,7 @@ export default function Layout() {
   const [renderInputsArr, setRenderInputsArr] = useState<number[]>([0])
   const [showAddNewBoard, setShowAddNewBoard] = useState(false)
   const [showEditTask, setShowEditTask] = useState(false)
+  const [toggle, setToggle] = useState(false)
 
   let paramsBoard: TBoard | undefined
   if (boards) {
@@ -74,7 +75,7 @@ export default function Layout() {
           ...subtaskDefaultValues,
           editableTitle: task?.title,
           editableDescription: task?.description
-        }) 
+        })
       }
     }
   }, [paramsBoard])
@@ -83,12 +84,11 @@ export default function Layout() {
   const onSubmit = () => { }
 
   console.log(watch())
-
   return (
-    <div className="bg-[#20212C] min-h-[100vh] flex flex-col">
+    <div className={`bg-[#20212C] transition-all min-h-[100vh] flex flex-col ${toggle ? "bg-[#F4F7FD]" : ""}`}>
 
       <context.Provider value={{
-        showDetails, deleteBoard, showAddTask, showAddNewBoard, showEditTask, setShowDetails, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, setBoards, boards, board, handleSubmit, register, renderInputsArr, setRenderInputsArr, onSubmit, unregister, showStatus, setStatus, status, paramsBoard, watch, setShowSidebar, showSidebar, showDotMenuHeader,
+        showDetails, deleteBoard, showAddTask, showAddNewBoard, showEditTask, setShowDetails, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, setBoards, boards, board, handleSubmit, register, renderInputsArr, setRenderInputsArr, onSubmit, unregister, showStatus, setStatus, status, paramsBoard, watch, setShowSidebar, showSidebar, showDotMenuHeader, toggle, setToggle
       }}>
 
         <Background />
@@ -99,7 +99,7 @@ export default function Layout() {
         <SidebarIcon />
         <Header />
 
-        <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask }} />
+        <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask, toggle }} />
 
       </context.Provider>
     </div>
