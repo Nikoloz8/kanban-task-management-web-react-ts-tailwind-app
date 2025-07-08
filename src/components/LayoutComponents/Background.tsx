@@ -5,10 +5,11 @@ export default function Background() {
 
     const ctx = useContext(context)
     if (!ctx) return null
-    
-    const { showDetails, deleteBoard, showAddNewBoard, showEditTask, setShowDetails, showAddTask, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset } = ctx
 
-    return showDetails || deleteBoard || showAddTask || showAddNewBoard || showEditTask ? <div onClick={() => {
+    const { showDetails, deleteBoard, showAddNewBoard, showEditTask, setShowDetails, showAddTask, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, deleteTask, setDeleteTask } = ctx
+
+    return showDetails || deleteBoard || deleteTask || showAddTask || showAddNewBoard || showEditTask ? <div onClick={() => {
+        setDeleteTask(false)
         setShowDetails(false)
         setShowEditTask(false)
         setShowDotMenu(false)

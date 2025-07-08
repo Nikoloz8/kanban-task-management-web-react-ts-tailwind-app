@@ -7,10 +7,10 @@ import { useOutletContext } from "react-router-dom"
 export default function Board() {
 
     const { H1 } = tailwind()
-    const { showSidebar, toggle } = useOutletContext<TContext>()
+    const { toggle } = useOutletContext<TContext>()
 
     return (
-        <div className={`flex p-[24px] gap-[24px] transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>
+        <div className={`flex h-[100%] absolute p-[24px] gap-[24px]`}>
 
             <Details />
 

@@ -14,7 +14,7 @@ export default function Header() {
 
     return (
         <header className={`w-[100%] flex relative bg-[#2B2C37] transition-all duration-1000 border-b-[1px] border-solid border-[#3E3F4E] ${toggle ? "bg-[#FFFFFF] border-[#E4EBFA]  " : ""}`}>
-            <div className={`fixed z-20 ${showSidebar ? "left-0" : "left-[-310px]"} border-r-[1px] border-solid border-[#3E3F4E] transition-all duration-1000 top-0 h-[100%] flex flex-col justify-between bg-[#2B2C37] ${toggle ? "bg-[#FFFFFF] border-[#E4EBFA]" : ""}`}>
+            <div className={`fixed z-20 ${showSidebar ? "left-0" : "left-[-310px]"} border-r-[1px] border-solid border-[#3E3F4E] overflow-y-auto custom-scroll transition-all duration-1000 top-0 h-[100%] flex flex-col justify-between bg-[#2B2C37] ${toggle ? "bg-[#FFFFFF] border-[#E4EBFA]" : ""}`}>
                 <div className="flex flex-col gap-[54px] items-start">
                     <img src={toggle ? "/images/logo-dark.svg" : "/images/logo-light.svg"} className="m-[32px_0_0_32px]" alt="" />
                     <div className="w-[276px] flex flex-col gap-[19px] mr-[24px]">

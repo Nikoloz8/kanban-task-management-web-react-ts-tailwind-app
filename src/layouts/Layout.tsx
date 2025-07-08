@@ -10,6 +10,7 @@ import NewTask from "../components/LayoutComponents/NewTask"
 import EditTask from "../components/LayoutComponents/EditTask"
 import Header from "../components/LayoutComponents/Header"
 import SidebarIcon from "../components/LayoutComponents/SidebarIcon"
+import DeleteTask from "../components/LayoutComponents/DeleteTask"
 
 export const context = createContext<TContext | null>(null)
 
@@ -32,6 +33,7 @@ export default function Layout() {
   const [showSidebar, setShowSidebar] = useState(false)
   const [showStatus, setShowStatus] = useState(false)
   const [deleteBoard, setDeleteBoard] = useState(false)
+  const [deleteTask, setDeleteTask] = useState(false)
   const [showDotMenu, setShowDotMenu] = useState(false)
   const [showDotMenuHeader, setShowDotMenuHeader] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
@@ -84,11 +86,13 @@ export default function Layout() {
   const onSubmit = () => { }
 
   console.log(watch())
+  console.log(deleteTask)
+
   return (
-    <div className={`bg-[#20212C] transition-all min-h-[100vh] flex flex-col ${toggle ? "bg-[#F4F7FD]" : ""}`}>
+    <div className={`bg-[#20212C] w-full transition-all min-h-screen flex flex-col ${toggle ? "bg-[#F4F7FD]" : ""}`}>
 
       <context.Provider value={{
-        showDetails, deleteBoard, showAddTask, showAddNewBoard, showEditTask, setShowDetails, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, setBoards, boards, board, handleSubmit, register, renderInputsArr, setRenderInputsArr, onSubmit, unregister, showStatus, setStatus, status, paramsBoard, watch, setShowSidebar, showSidebar, showDotMenuHeader, toggle, setToggle
+        showDetails, deleteBoard, showAddTask, showAddNewBoard, showEditTask, setShowDetails, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, setBoards, boards, board, handleSubmit, register, renderInputsArr, setRenderInputsArr, onSubmit, unregister, showStatus, setStatus, status, paramsBoard, watch, setShowSidebar, showSidebar, showDotMenuHeader, toggle, setToggle, setDeleteTask, deleteTask
       }}>
 
         <Background />
@@ -97,9 +101,12 @@ export default function Layout() {
         <NewTask />
         <EditTask />
         <SidebarIcon />
+        <DeleteTask />
         <Header />
+        <div className={`relative flex-1 overflow-y-auto custom-scroll transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>
+          <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, setDeleteTask, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask, toggle }} />
+        </div>
 
-        <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask, toggle }} />
 
       </context.Provider>
     </div>
