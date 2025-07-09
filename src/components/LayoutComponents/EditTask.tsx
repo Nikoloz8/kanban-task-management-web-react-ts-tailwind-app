@@ -15,7 +15,7 @@ export default function EditTask() {
     const { returnSubtasks, handleDeleteSubtask, getColumnByName, handleEditTask } = index({ watch, setRenderInputsArr, unregister, paramsBoard, setShowEditTask, setShowDotMenu, status, boards, setBoards, reset, renderInputsArr })
 
     return (
-        <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] hidden flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${showEditTask && "flex!"}`}>
+        <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] hidden flex-col gap-[24px] z-40 rounded-[6px] max-sm:w-[343px] w-[480px] ${showEditTask && "flex!"}`}>
             <h2 className={`${H2} text-[#FFFFFF]`}>Edit Task</h2>
             <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-[24px]">
                 <div className="flex flex-col gap-[8px]">

@@ -5,7 +5,7 @@ import index from "../../utils"
 export default function RenderColumns() {
 
 
-    const { boards, setBoards, paramsBoard, setShowDetails, toggle } = useOutletContext<TBoardPage>()
+    const { boards, setBoards, paramsBoard, setShowDetails, toggle, setShowDotMenuHeader } = useOutletContext<TBoardPage>()
 
     const { getSubtasksCompletedCount, storeTaskName, storeColumnName } = index({ paramsBoard, setBoards, boards })
     const { H4, H3 } = tailwind()
@@ -19,6 +19,7 @@ export default function RenderColumns() {
                     return <div onClick={() => {
                         storeTaskName(l.title)
                         setShowDetails(true)
+                        setShowDotMenuHeader(false)
                     }} key={j} className={`w-[280px] p-[24px_16px] flex flex-col gap-[8px] bg-[#2B2C37] rounded-[8px] shadow-[0_4px_6px_0_rgba(54,78,126,0.1)] ${toggle ? "bg-[#FFFFFF]" : ""}`}>
                         <h3 className={`${H3} text-[#FFFFFF] ${toggle ? "text-[#000112]!" : ""}`}>{l.title}</h3>
                         <h4 className={`${H4} text-[#828FA3] tracking-[0px]!`}>    Subtasks {getSubtasksCompletedCount(l.subtasks)} of {l.subtasks.length}

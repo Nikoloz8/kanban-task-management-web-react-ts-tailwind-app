@@ -11,10 +11,10 @@ export default function DeleteTask() {
     const { deleteTask, setDeleteTask, paramsBoard, setBoards, watch, boards } = ctx
     const { handleDeleteTask } = index({ paramsBoard, setBoards, watch, boards })
     return (
-        <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${!deleteTask && "hidden"}`}>
+        <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] max-sm:w-[343px] w-[480px] ${!deleteTask && "hidden"}`}>
             <h2 className={`${H2} text-[#EA5555]`}>Delete this task?</h2>
             <p className={`${P1} text-[#828FA3]`}>Are you sure you want to delete the ‘Build settings UI’ task and its subtasks? This action cannot be reversed.</p>
-            <div className="flex justify-between">
+            <div className="flex justify-between max-sm:flex-col max-sm:gap-[16px]">
                 <button onClick={() => {
                     handleDeleteTask()
                     setDeleteTask(false)

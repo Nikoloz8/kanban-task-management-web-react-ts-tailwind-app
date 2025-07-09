@@ -12,7 +12,7 @@ export default function NewBoard() {
     const {handleDeleteSubtask, handleSaveBoard} = index({setRenderInputsArr, unregister, boards, watch, setBoards, setShowAddNewBoard})
 
     return (
-        <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] w-[480px] ${!showAddNewBoard && "hidden!"}`}>
+        <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] max-sm:w-[343px] w-[480px] ${!showAddNewBoard && "hidden!"}`}>
             <h2 className={`${H2} text-[#FFFFFF]`}>Add New Board</h2>
             <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-[24px]">
                 <div className="flex flex-col gap-[8px]">

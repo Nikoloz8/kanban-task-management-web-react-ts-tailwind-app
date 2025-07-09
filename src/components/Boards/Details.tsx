@@ -10,7 +10,7 @@ export default function Details() {
     const task = getTaskByName()
 
     return (
-        <div className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-[32px] bg-[#2B2C37] w-[480px] flex flex-col gap-[24px] rounded-[6px] z-40 ${!showDetails && "hidden"}`}>
+        <div className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-[32px] bg-[#2B2C37] w-[480px] max-sm:w-[343px] flex flex-col gap-[24px] rounded-[6px] z-40 ${!showDetails && "hidden"}`}>
             <div className="flex justify-between items-center relative">
                 <h2 className={`${H2} text-[#FFFFFF]! w-[90%]`}>{task?.title}</h2>
                 <img onClick={() => setShowDotMenu(!showDotMenu)} className="cursor-pointer" src="/images/icon-vertical-ellipsis.svg" alt="" />

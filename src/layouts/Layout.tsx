@@ -44,6 +44,18 @@ export default function Layout() {
   const [showAddNewBoard, setShowAddNewBoard] = useState(false)
   const [showEditTask, setShowEditTask] = useState(false)
   const [toggle, setToggle] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 700)
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 700)
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   let paramsBoard: TBoard | undefined
   if (boards) {
@@ -85,14 +97,11 @@ export default function Layout() {
 
   const onSubmit = () => { }
 
-  console.log(watch())
-  console.log(deleteTask)
-
   return (
     <div className={`bg-[#20212C] w-full transition-all min-h-screen flex flex-col ${toggle ? "bg-[#F4F7FD]" : ""}`}>
 
       <context.Provider value={{
-        showDetails, deleteBoard, showAddTask, showAddNewBoard, showEditTask, setShowDetails, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, setBoards, boards, board, handleSubmit, register, renderInputsArr, setRenderInputsArr, onSubmit, unregister, showStatus, setStatus, status, paramsBoard, watch, setShowSidebar, showSidebar, showDotMenuHeader, toggle, setToggle, setDeleteTask, deleteTask
+        showDetails, deleteBoard, showAddTask, showAddNewBoard, showEditTask, setShowDetails, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, setBoards, boards, board, handleSubmit, register, renderInputsArr, setRenderInputsArr, onSubmit, unregister, showStatus, setStatus, status, paramsBoard, watch, setShowSidebar, showSidebar, showDotMenuHeader, toggle, setToggle, setDeleteTask, deleteTask, isMobile
       }}>
 
         <Background />
@@ -103,8 +112,9 @@ export default function Layout() {
         <SidebarIcon />
         <DeleteTask />
         <Header />
-        <div className={`relative flex-1 overflow-y-auto custom-scroll transition-all duration-1000 ${showSidebar && "ml-[300px]"}`}>
-          <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, setDeleteTask, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask, toggle }} />
+
+        <div className={`relative flex-1 overflow-y-auto custom-scroll transition-all duration-1000 ${showSidebar && !isMobile && "ml-[300px]"}`}>
+          <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, setDeleteTask, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask, toggle, setShowDotMenuHeader }} />
         </div>
 
 

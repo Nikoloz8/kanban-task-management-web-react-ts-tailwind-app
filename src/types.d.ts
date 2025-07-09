@@ -50,6 +50,7 @@ type TBoardPage = {
     showEditTask: boolean
     toggle: boolean
     setDeleteTask: React.Dispatch<React.SetStateAction<boolean>>
+    setShowDotMenuHeader: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
@@ -106,4 +107,5 @@ type TContext = {
     setToggle: React.Dispatch<React.SetStateAction<boolean>>
     deleteTask: boolean
     setDeleteTask: React.Dispatch<React.SetStateAction<boolean>>
+    isMobile: boolean
 }
