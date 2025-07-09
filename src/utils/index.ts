@@ -158,7 +158,7 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
 
     const handleChangeStatus = (newStatus: string) => {
         const task = getTaskByName()
-        if (!task) return
+        if (!task || task.status === newStatus) return
 
         const prevColumn = paramsBoard?.columns.find(col => col.name === task.status)
         const newColumn = paramsBoard?.columns.find(col => col.name === newStatus)
@@ -185,6 +185,8 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
 
         handleSaveColumns(updatedColumns)
     }
+
+
 
     const handleDeleteBoard = () => {
         const filteredBoards = boards?.filter((e) => e.name !== board)
