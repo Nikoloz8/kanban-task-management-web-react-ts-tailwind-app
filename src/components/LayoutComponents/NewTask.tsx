@@ -10,7 +10,7 @@ export default function NewTask() {
     const { handleSubmit, showAddTask, onSubmit, register, renderInputsArr, setRenderInputsArr, setShowStatus, showStatus, setStatus, status, paramsBoard, setShowDetails, setBoards, boards, setShowDotMenu, setShowAddTask, watch, reset, unregister } = ctx
 
     const { H4, inputStyle, P1, H2 } = tailwind()
-    const { handleDeleteSubtask, handleSaveTask } = index({ paramsBoard, boards, setBoards, reset, watch, setRenderInputsArr, renderInputsArr, unregister })
+    const { handleDeleteInput, handleSaveTask } = index({ paramsBoard, boards, setBoards, reset, watch, setRenderInputsArr, renderInputsArr, unregister })
 
     return (
         <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] max-sm:w-[343px] w-[480px] ${!showAddTask ? "hidden" : ''}`}>
@@ -32,7 +32,7 @@ recharge the batteries a little." />
                             {renderInputsArr.map((_e, i) => {
                                 return <div key={i} className="flex gap-[16px] items-center">
                                     <input {...register(`newTaskSubtask${i}`)} className={`${inputStyle}`} placeholder="e.g. Make coffee" type="text" />
-                                    <svg onClick={() => handleDeleteSubtask(i)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
+                                    <svg onClick={() => handleDeleteInput("newTaskSubtask", i)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
                                 </div>
                             })}
                         </div>

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 
-export default function index({ paramsBoard, boards, status, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch, setShowEditTask, setShowDotMenu }: TIndex) {
+export default function index({ paramsBoard, boards, status, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch, setShowEditTask, setShowDotMenu, subtasks }: TIndex) {
 
     const { board } = useParams()
 
@@ -195,16 +195,17 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
         localStorage.setItem("boards", stringedFilteredboards)
     }
 
-    const handleDeleteSubtask = (index: number) => {
+    const handleDeleteInput = (name: string, index: number) => {
         setRenderInputsArr!(renderInputsArr!.filter((_e, i) => i !== index))
-        unregister(`subtask${index}`)
+        unregister(`${name}${index}`)
+        console.log(renderInputsArr)
     }
 
-    const returnBoardObject = () => {
+    const returnColumns = () => {
         const columns = []
 
         for (let i of Object.keys(watch())) {
-            if (i.includes("column")) {
+            if (i.includes("columnNew")) {
                 const columnObj = {
                     name: watch()[i],
                     tasks: []
@@ -212,9 +213,14 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
                 columns.push(columnObj)
             }
         }
+
+        return columns
+    }
+
+    const returnBoardObject = () => {
         const board = {
-            name: watch().boardName,
-            columns
+            name: watch().boardNameNew,
+            columns: returnColumns()
         }
         return board
     }
@@ -239,12 +245,17 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
         const currentColumn = paramsBoard.columns.find(col => col.name === originalTask.status)
         const targetColumn = paramsBoard.columns.find(col => col.name === newStatus)
         if (!currentColumn || !targetColumn) return
-        const subtasks: ISubtasks[] = []
+        const subtasksNew: ISubtasks[] = []
+
+        for (let i = 0; i < subtasks?.length!; i++) {
+            subtasksNew.push(subtasks![i])
+        }
+
         Object.keys(values).forEach(key => {
-            if (key.startsWith("subtask") || key.startsWith("subtaskDefault")) {
+            if (key.startsWith("subtask") && !key.includes("Default")) {
                 const title = values[key]?.trim()
                 if (title) {
-                    subtasks.push({ title, isCompleted: false })
+                    subtasksNew.push({ title, isCompleted: false })
                 }
             }
         })
@@ -252,7 +263,7 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
             title: newTitle || originalTask.title,
             description: newDescription || "",
             status: newStatus,
-            subtasks,
+            subtasks: subtasksNew,
         }
         const updatedColumns = paramsBoard.columns.map(col => {
             if (col.name === currentColumn.name) {
@@ -272,5 +283,5 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
         reset()
     }
 
-    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteSubtask, handleSaveTask, handleSaveBoard, returnSubtasks, returnTaskObject, handleEditTask }
+    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteInput, handleSaveTask, handleSaveBoard, returnSubtasks, returnTaskObject, handleEditTask, returnColumns }
 }

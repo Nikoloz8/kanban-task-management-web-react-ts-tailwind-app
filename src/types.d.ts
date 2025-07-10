@@ -50,6 +50,8 @@ type TBoardPage = {
     showEditTask: boolean
     toggle: boolean
     setDeleteTask: React.Dispatch<React.SetStateAction<boolean>>
+    subtasks: { title: string, isCompleted: boolean }[]
+    setSubtasks: React.Dispatch<React.SetStateAction<{ title: string; isCompleted: boolean; }[]>>
     setShowDotMenuHeader: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -67,6 +69,7 @@ type TIndex = Partial<{
     setShowAddNewBoard: React.Dispatch<React.SetStateAction<boolean>>
     setShowDotMenu: React.Dispatch<React.SetStateAction<boolean>>
     setShowEditTask: React.Dispatch<React.SetStateAction<boolean>>
+    subtasks: { title: string, isCompleted: boolean }[]
 }>
 
 type TContext = {
@@ -108,4 +111,8 @@ type TContext = {
     deleteTask: boolean
     setDeleteTask: React.Dispatch<React.SetStateAction<boolean>>
     isMobile: boolean
+    setShowEditBoard: React.Dispatch<React.SetStateAction<boolean>>
+    showEditBoard: boolean
+    subtasks: { title: string, isCompleted: boolean }[]
+    setSubtasks: React.Dispatch<React.SetStateAction<{ title: string; isCompleted: boolean; }[]>>
 }

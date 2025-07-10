@@ -8,11 +8,11 @@ export default function EditTask() {
     const ctx = useContext(context)
     if (!ctx) return
 
-    const { handleSubmit, register, showEditTask, onSubmit, unregister, renderInputsArr, setRenderInputsArr, setShowStatus, showStatus, setShowDetails, setStatus, setShowDotMenu, status, boards, paramsBoard, setShowEditTask, reset, watch, setBoards } = ctx
+    const { handleSubmit, register, showEditTask, onSubmit, unregister, renderInputsArr, setRenderInputsArr, setShowStatus, showStatus, setShowDetails, setStatus, setShowDotMenu, status, boards, paramsBoard, setShowEditTask, reset, watch, setBoards, subtasks, setSubtasks } = ctx
 
     const { H2, inputStyle, H4, P1 } = tailwind()
 
-    const { returnSubtasks, handleDeleteSubtask, getColumnByName, handleEditTask } = index({ watch, setRenderInputsArr, unregister, paramsBoard, setShowEditTask, setShowDotMenu, status, boards, setBoards, reset, renderInputsArr })
+    const { handleDeleteInput, getColumnByName, handleEditTask } = index({ watch, setRenderInputsArr, unregister, paramsBoard, setShowEditTask, setShowDotMenu, status, boards, setBoards, reset, renderInputsArr, subtasks })
 
     return (
         <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] hidden flex-col gap-[24px] z-40 rounded-[6px] max-sm:w-[343px] w-[480px] ${showEditTask && "flex!"}`}>
@@ -31,12 +31,12 @@ recharge the batteries a little." />
                     <label htmlFor="" className={`${H4} text-[#FFFFFF]`}>Subtasks</label>
                     <div className="flex flex-col gap-[12px]">
                         <div className="flex flex-col gap-[12px] overflow-y-auto max-h-[20vh]!">
-                            {returnSubtasks("subtaskDefault").map((_e, i) => {
+                            {subtasks.map((_e, i) => {
                                 return <div key={i} className="flex gap-[16px] items-center">
                                     <input {...register(`subtaskDefault${i}`)} className={`${inputStyle}`} placeholder="e.g. Make coffee" type="text" />
                                     <svg onClick={() => {
-                                        handleDeleteSubtask(i)
                                         unregister(`subtaskDefault${i}`)
+                                        setSubtasks(subtasks.filter((_e, ind) => i != ind))
                                     }
                                     } width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
                                 </div>
@@ -44,7 +44,7 @@ recharge the batteries a little." />
                             {renderInputsArr.map((_e, i) => {
                                 return <div key={i} className="flex gap-[16px] items-center">
                                     <input {...register(`subtask${i}`)} className={inputStyle} placeholder="e.g. Make coffee" />
-                                    <svg onClick={() => handleDeleteSubtask(i)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
+                                    <svg onClick={() => handleDeleteInput("subtask", i)} width="15" height="15" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" className="hover:fill-[#EA5555] cursor-pointer" fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" /><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" /></g></svg>
                                 </div>
                             })}
                         </div>

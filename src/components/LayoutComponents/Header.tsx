@@ -7,7 +7,7 @@ export default function Header() {
 
     const ctx = useContext(context)
     if (!ctx) return
-    const { boards, setShowAddNewBoard, showAddNewBoard, setShowSidebar, showSidebar, showDotMenuHeader, setShowAddTask, showAddTask, setShowDotMenuHeader, setDeleteBoard, board, reset, toggle, setToggle, isMobile } = ctx
+    const { boards, setShowAddNewBoard, showAddNewBoard, setShowSidebar, showSidebar, showDotMenuHeader, setShowAddTask, showAddTask, setShowDotMenuHeader, setDeleteBoard, board, reset, toggle, setToggle, isMobile, setShowEditBoard, setRenderInputsArr } = ctx
 
     const { H4, H3, H1, P1 } = tailwind()
     const navigate = useNavigate()
@@ -28,6 +28,7 @@ export default function Header() {
                             })}
                             <button onClick={() => {
                                 setShowAddNewBoard(!showAddNewBoard)
+                                setRenderInputsArr([0])
                                 isMobile && setShowSidebar(false)
                                 reset({ boardName: "", })
                             }} className={`cursor-pointer w-[100%] flex gap-[16px] rounded-[0_100px_100px_0] ${H3} text-[#635FC7] items-center p-[16px_32px]`}>
@@ -74,7 +75,15 @@ export default function Header() {
                                 setShowDotMenuHeader(!showDotMenuHeader)
                             }} src="/images/icon-vertical-ellipsis.svg" alt="" />
                             <div className={`absolute ${!showDotMenuHeader && "hidden"} p-[16px] flex flex-col gap-[16px] bg-[#20212C] z-10 shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] top-[50px] right-0`}>
-                                <h5 className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Board</h5>
+                                <h5 onClick={() => {
+                                    const arr = []
+                                    for (let i = 0; i < boards?.find((e) => e.name === board)!.columns?.length!; i++) {
+                                        arr.push(i)
+                                    }
+                                    setRenderInputsArr(arr)
+                                    setShowEditBoard(true)
+                                    setShowDotMenuHeader(false)
+                                }} className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Board</h5>
                                 <h5 onClick={() => {
                                     setDeleteBoard(true)
                                     setShowDotMenuHeader(false)

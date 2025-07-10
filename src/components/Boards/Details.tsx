@@ -4,7 +4,7 @@ import index from "../../utils"
 
 export default function Details() {
 
-    const { boards, setBoards, setShowStatus, showDotMenu, setShowDotMenu, showStatus, paramsBoard, showDetails, setShowDetails, setShowEditTask, showEditTask, setDeleteTask } = useOutletContext<TBoardPage>()
+    const { boards, setBoards, setShowStatus, showDotMenu, setShowDotMenu, showStatus, paramsBoard, showDetails, setShowDetails, setShowEditTask, showEditTask, setDeleteTask, setSubtasks } = useOutletContext<TBoardPage>()
     const { getTaskByName, getSubtasksCompletedCount, handleChangeIsCompleted, handleChangeStatus } = index({ paramsBoard, setBoards, boards })
     const { H4, H2, P1 } = tailwind()
     const task = getTaskByName()
@@ -19,6 +19,7 @@ export default function Details() {
                         setShowEditTask(!showEditTask)
                         setShowDetails(false)
                         setShowDotMenu(false)
+                        setSubtasks([...task?.subtasks!])
                     }} className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Task</h5>
                     <h5 onClick={() => {
                         setDeleteTask(true)
