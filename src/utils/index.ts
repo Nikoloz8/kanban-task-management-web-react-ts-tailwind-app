@@ -1,6 +1,6 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
-export default function index({ paramsBoard, boards, status, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch, setShowEditTask, setShowDotMenu, subtasks }: TIndex) {
+export default function index({ paramsBoard, boards, status, setShowAddNewBoard, setBoards, reset, setRenderInputsArr, unregister, renderInputsArr, watch, setShowEditTask, setShowDotMenu, subtasks, columns }: TIndex) {
 
     const { board } = useParams()
 
@@ -198,7 +198,6 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
     const handleDeleteInput = (name: string, index: number) => {
         setRenderInputsArr!(renderInputsArr!.filter((_e, i) => i !== index))
         unregister(`${name}${index}`)
-        console.log(renderInputsArr)
     }
 
     const returnColumns = () => {
@@ -225,15 +224,6 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
         return board
     }
 
-    const handleSaveBoard = () => {
-        if (!boards) return
-        setBoards!([...boards, returnBoardObject()])
-        setShowAddNewBoard!(false)
-        const boardsForPush = boards
-        boardsForPush.push(returnBoardObject())
-        const stringedBoards = JSON.stringify(boardsForPush)
-        localStorage.setItem("boards", stringedBoards)
-    }
 
     const handleEditTask = () => {
         const originalTask = getTaskByName()
@@ -247,9 +237,14 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
         if (!currentColumn || !targetColumn) return
         const subtasksNew: ISubtasks[] = []
 
-        for (let i = 0; i < subtasks?.length!; i++) {
-            subtasksNew.push(subtasks![i])
-        }
+        Object.keys(values).forEach(key => {
+            if (key.startsWith("subtaskDefault")) {
+                const title = values[key]?.trim()
+                if (title) {
+                    subtasksNew.push({ title, isCompleted: subtasks![Number(key.slice(14))].isCompleted })
+                }
+            }
+        })
 
         Object.keys(values).forEach(key => {
             if (key.startsWith("subtask") && !key.includes("Default")) {
@@ -283,5 +278,60 @@ export default function index({ paramsBoard, boards, status, setShowAddNewBoard,
         reset()
     }
 
-    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteInput, handleSaveTask, handleSaveBoard, returnSubtasks, returnTaskObject, handleEditTask, returnColumns }
+    const handleSaveBoard = () => {
+        if (!boards) return
+        setBoards!([...boards, returnBoardObject()])
+        setShowAddNewBoard!(false)
+        const boardsForPush = boards
+        boardsForPush.push(returnBoardObject())
+        const stringedBoards = JSON.stringify(boardsForPush)
+        localStorage.setItem("boards", stringedBoards)
+    }
+
+    const navigate = useNavigate()
+
+    const handleEditBoard = () => {
+        const columnsNew: TColumn[] = []
+        const values = watch() as Record<string, any>
+
+        Object.keys(values).forEach(key => {
+            if (key.startsWith("columnDefault")) {
+                const title = values[key]?.trim()
+                if (title) {
+                    columnsNew!.push({
+                        name: title,
+                        tasks: columns![Number(key.slice(13))].tasks
+                    })
+                }
+            }
+        })
+
+
+        const boardsForPush = boards?.filter((e) => e.name !== paramsBoard?.name)
+
+        Object.keys(values).forEach(key => {
+            if (key.startsWith("column") && !key.includes("Default")) {
+                const title = values[key]?.trim()
+                if (title) {
+                    columnsNew!.push({
+                        name: title,
+                        tasks: []
+                    })
+                }
+
+            }
+        })
+
+        boardsForPush!.push({
+            name: watch().boardName,
+            columns: columnsNew
+        })
+
+        navigate(watch().boardName)
+        setBoards!(boardsForPush)
+        const stringedBoards = JSON.stringify(boardsForPush)
+        localStorage.setItem("boards", stringedBoards)
+    }
+
+    return { getColumnByName, getTaskByName, getSubtasksCompletedCount, storeTaskName, storeColumnName, handleSaveColumns, handleSaveChangedTasks, handleChangeIsCompleted, handleDeleteTask, handleChangeStatus, handleDeleteBoard, handleDeleteInput, handleSaveTask, handleSaveBoard, returnSubtasks, returnTaskObject, handleEditTask, returnColumns, handleEditBoard }
 }

@@ -7,7 +7,7 @@ export default function Header() {
 
     const ctx = useContext(context)
     if (!ctx) return
-    const { boards, setShowAddNewBoard, showAddNewBoard, setShowSidebar, showSidebar, showDotMenuHeader, setShowAddTask, showAddTask, setShowDotMenuHeader, setDeleteBoard, board, reset, toggle, setToggle, isMobile, setShowEditBoard, setRenderInputsArr } = ctx
+    const { boards, setShowAddNewBoard, showAddNewBoard, setShowSidebar, showSidebar, showDotMenuHeader, setShowAddTask, showAddTask, setShowDotMenuHeader, setDeleteBoard, board, reset, toggle, setToggle, isMobile, setShowEditBoard, setRenderInputsArr, setColumns, paramsBoard } = ctx
 
     const { H4, H3, H1, P1 } = tailwind()
     const navigate = useNavigate()
@@ -67,7 +67,10 @@ export default function Header() {
                         </div>
                     </div>
                     <div className="flex gap-[24px] items-center">
-                        <button onClick={() => setShowAddTask(!showAddTask)} className={`p-[15px_24px] cursor-pointer bg-[#635FC7] flex items-center rounded-[24px] ${H3} text-[#FFFFFF]`}>
+                        <button onClick={() => {
+                            setShowAddTask(!showAddTask)
+                            setRenderInputsArr([0])
+                        }} className={`p-[15px_24px] cursor-pointer bg-[#635FC7] flex items-center rounded-[24px] ${H3} text-[#FFFFFF]`}>
                             {isMobile ? <img src="/images/icon-add-task-mobile.svg" alt="" /> : "+ Add New Task"}
                         </button>
                         <div className="relative">
@@ -76,11 +79,8 @@ export default function Header() {
                             }} src="/images/icon-vertical-ellipsis.svg" alt="" />
                             <div className={`absolute ${!showDotMenuHeader && "hidden"} p-[16px] flex flex-col gap-[16px] bg-[#20212C] z-10 shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] top-[50px] right-0`}>
                                 <h5 onClick={() => {
-                                    const arr = []
-                                    for (let i = 0; i < boards?.find((e) => e.name === board)!.columns?.length!; i++) {
-                                        arr.push(i)
-                                    }
-                                    setRenderInputsArr(arr)
+                                    setColumns(paramsBoard?.columns!)
+                                    setRenderInputsArr([0])
                                     setShowEditBoard(true)
                                     setShowDotMenuHeader(false)
                                 }} className={`${P1} text-[#828FA3] w-[160px] cursor-pointer`}>Edit Board</h5>
