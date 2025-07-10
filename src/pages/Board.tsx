@@ -19,7 +19,7 @@ export default function Board() {
             <div onClick={() => {
                 setShowEditBoard(true)
                 setColumns(paramsBoard?.columns!)
-            }} className={`w-[280px] h-[100vh] mt-[34px] cursor-pointer bg-[rgba(43,44,55,0.5)] rounded-[6px] ${H1} text-[#828FA3] flex items-center justify-center ${toggle ? "bg-[rgba(233,239,250,0.5)]" : ""}`}>+ New Column</div>
+            }} className={`w-[280px] h-[100vh] mt-[34px] cursor-pointer bg-[rgba(43,44,55,0.5)] rounded-[6px] ${H1} text-[#828FA3] hover:text-[#635FC7] flex items-center justify-center ${toggle ? "bg-[rgba(233,239,250,0.5)]" : ""}`}>+ New Column</div>
         </div>
     )
 }

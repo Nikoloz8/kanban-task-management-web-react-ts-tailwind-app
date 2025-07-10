@@ -10,11 +10,11 @@ export default function DeleteBoard() {
     const ctx = useContext(context)
     if (!ctx) return null
 
-    const { boards, setBoards, setDeleteBoard, deleteBoard, board } = ctx
+    const { boards, setBoards, setDeleteBoard, deleteBoard, board, toggle } = ctx
     const { handleDeleteBoard } = index({ boards, setBoards })
 
     return (
-        <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] w-[480px] max-sm:w-[343px] ${!deleteBoard && "hidden"}`}>
+        <div className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#2B2C37] p-[32px] flex flex-col gap-[24px] z-40 rounded-[6px] w-[480px] max-sm:w-[343px] ${toggle && "bg-[#FFFFFF]"} ${!deleteBoard && "hidden"}`}>
             <h2 className={`${H2} text-[#EA5555]`}>Delete this board?</h2>
             <p className={`${P1} text-[#828FA3]`}>Are you sure you want to delete the {board} board? This action will remove all columns and tasks and cannot be reversed.</p>
             <div className="flex justify-between max-sm:flex-col max-sm:gap-[16px]">

@@ -41,7 +41,10 @@ export default function Header() {
                 <div className="flex flex-col gap-[22px] items-center">
                     <div className={`flex p-[14px_64px] gap-[24px] items-center rounded-[6px] bg-[#20212C] ${toggle ? "bg-[#F4F7FD]" : ""} transition-all!`}>
                         <img src="/images/icon-light-theme.svg" alt="" />
-                        <div onClick={() => setToggle(!toggle)} className={`p-[3px] cursor-pointer rounded-[12px] bg-[#635FC7] w-[40px]`}>
+                        <div onClick={() => {
+                            setToggle(!toggle)
+                            localStorage.setItem("toggle", String(toggle))
+                        }} className={`p-[3px] cursor-pointer rounded-[12px] bg-[#635FC7] w-[40px]`}>
                             <div className={`w-[14px] h-[14px] rounded-[100%] bg-[#FFFFFF] transition-all duration-500 ${toggle ? "translate-x-[140%]!" : ""}`}></div>
                         </div>
                         <img src="/images/icon-dark-theme.svg" alt="" />
@@ -77,7 +80,7 @@ export default function Header() {
                             <img className="cursor-pointer" onClick={() => {
                                 setShowDotMenuHeader(!showDotMenuHeader)
                             }} src="/images/icon-vertical-ellipsis.svg" alt="" />
-                            <div className={`absolute ${!showDotMenuHeader && "hidden"} p-[16px] flex flex-col gap-[16px] bg-[#20212C] z-10 shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] top-[50px] right-0`}>
+                            <div className={`absolute ${!showDotMenuHeader && "hidden"} p-[16px] flex flex-col gap-[16px] bg-[#20212C] z-10 shadow-[0_10px_20px_0_rgba(54,78,126,0.25)] rounded-[8px] top-[50px] right-0 ${toggle && "bg-[#FFFFFF]!"}`}>
                                 <h5 onClick={() => {
                                     setColumns(paramsBoard?.columns!)
                                     setRenderInputsArr([0])

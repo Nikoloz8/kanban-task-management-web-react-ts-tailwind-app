@@ -53,6 +53,12 @@ export default function Layout() {
   useEffect(() => {
     setIsMobile(window.innerWidth < 700)
 
+    const theme = localStorage.getItem("toggle")
+    if (theme) {
+      const parsed = JSON.parse(theme)
+      setToggle(!parsed)
+    }
+
     const handleResize = () => {
       setIsMobile(window.innerWidth < 700)
     }
