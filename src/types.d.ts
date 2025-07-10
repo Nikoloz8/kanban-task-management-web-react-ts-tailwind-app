@@ -47,29 +47,6 @@ type TUseForm = {
 
 }
 
-type TBoardPage = {
-    boards: TBoard[]
-    setBoards: React.Dispatch<React.SetStateAction<TBoard[] | undefined>>
-    showSidebar: boolean
-    setShowStatus: React.Dispatch<React.SetStateAction<boolean>>
-    showStatus: boolean
-    paramsBoard: TBoard | undefined
-    setShowDetails: React.Dispatch<React.SetStateAction<boolean>>
-    showDetails: boolean
-    showDotMenu: boolean
-    setShowDotMenu: React.Dispatch<React.SetStateAction<boolean>>
-    setShowEditTask: React.Dispatch<React.SetStateAction<boolean>>
-    showEditTask: boolean
-    toggle: boolean
-    setDeleteTask: React.Dispatch<React.SetStateAction<boolean>>
-    subtasks: { title: string, isCompleted: boolean }[]
-    setSubtasks: React.Dispatch<React.SetStateAction<{ title: string; isCompleted: boolean; }[]>>
-    setShowDotMenuHeader: React.Dispatch<React.SetStateAction<boolean>>
-    setRenderInputsArr: React.Dispatch<React.SetStateAction<number[]>>
-    renderInputsArr: number[]
-}
-
-
 type TIndex = Partial<{
     paramsBoard: TBoard | undefined
     setBoards: React.Dispatch<React.SetStateAction<TBoard[] | undefined>>
@@ -107,6 +84,7 @@ type TIndex = Partial<{
 }>
 
 type TContext = {
+    showDotMenu: boolean
     showDetails: boolean
     deleteBoard: boolean
     showAddTask: boolean

@@ -73,7 +73,7 @@ export default function Header() {
                         <button onClick={() => {
                             setShowAddTask(!showAddTask)
                             setRenderInputsArr([0])
-                        }} className={`p-[15px_24px] cursor-pointer bg-[#635FC7] flex items-center rounded-[24px] ${H3} text-[#FFFFFF]`}>
+                        }} className={`p-[15px_24px] cursor-pointer bg-[#635FC7] flex items-center rounded-[24px] ${H3} text-[#FFFFFF] ${paramsBoard?.columns.length === 0 && "opacity-[0.25]"}`}>
                             {isMobile ? <img src="/images/icon-add-task-mobile.svg" alt="" /> : "+ Add New Task"}
                         </button>
                         <div className="relative">

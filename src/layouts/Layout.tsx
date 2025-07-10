@@ -12,6 +12,7 @@ import Header from "../components/LayoutComponents/Header"
 import SidebarIcon from "../components/LayoutComponents/SidebarIcon"
 import DeleteTask from "../components/LayoutComponents/DeleteTask"
 import EditBoard from "../components/LayoutComponents/EditBoard"
+import tailwind from "../style/tailwind"
 
 export const context = createContext<TContext | null>(null)
 
@@ -108,11 +109,13 @@ export default function Layout() {
 
   const onSubmit = () => { }
 
+  const { H2 } = tailwind()
+
   return (
     <div className={`bg-[#20212C] w-full transition-all min-h-screen flex flex-col ${toggle ? "bg-[#F4F7FD]" : ""}`}>
 
       <context.Provider value={{
-        showDetails, deleteBoard, showAddTask, showAddNewBoard, showEditTask, setShowDetails, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, setBoards, boards, board, handleSubmit, register, renderInputsArr, setRenderInputsArr, onSubmit, unregister, showStatus, setStatus, status, paramsBoard, watch, setShowSidebar, showSidebar, showDotMenuHeader, toggle, setToggle, setDeleteTask, deleteTask, isMobile, setShowEditBoard, showEditBoard, subtasks, setSubtasks, setColumns, columns
+        showDetails, deleteBoard, showAddTask, showAddNewBoard, showEditTask, setShowDetails, setShowEditTask, setShowDotMenu, setShowStatus, setDeleteBoard, setShowAddTask, setShowDotMenuHeader, setShowAddNewBoard, reset, setBoards, boards, board, handleSubmit, register, renderInputsArr, setRenderInputsArr, onSubmit, unregister, showStatus, setStatus, status, paramsBoard, watch, setShowSidebar, showSidebar, showDotMenuHeader, toggle, setToggle, setDeleteTask, deleteTask, isMobile, setShowEditBoard, showEditBoard, subtasks, setSubtasks, setColumns, columns, showDotMenu
       }}>
 
         <Background />
@@ -126,10 +129,12 @@ export default function Layout() {
         <Header />
 
 
+        {!board && <div className={`${H2} text-[#828FA3] w-[100%] text-[2.8rem]! min-h-[90vh] h-[100%]! flex items-center justify-center`}>Please Choose Platform</div>}
 
         <div className={`relative flex-1 overflow-y-auto custom-scroll transition-all duration-1000 ${showSidebar && !isMobile && "ml-[300px]"}`}>
-          <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, setDeleteTask, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask, toggle, setShowDotMenuHeader, setSubtasks, subtasks, setShowEditBoard, renderInputsArr, setRenderInputsArr, setColumns }} />
+          <Outlet context={{ boards, setBoards, showSidebar, setShowStatus, showStatus, paramsBoard, showDetails, setShowDetails, setDeleteTask, showDotMenu, setShowDotMenu, setShowEditTask, showEditTask, toggle, setShowDotMenuHeader, setSubtasks, subtasks, setShowEditBoard, renderInputsArr, setRenderInputsArr, setColumns, board }} />
         </div>
+
 
 
       </context.Provider >

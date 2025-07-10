@@ -4,7 +4,7 @@ import index from "../../utils"
 
 export default function Details() {
 
-    const { boards, setBoards, setShowStatus, showDotMenu, setShowDotMenu, showStatus, paramsBoard, showDetails, setShowDetails, setShowEditTask, showEditTask, setDeleteTask, setSubtasks, setRenderInputsArr, toggle } = useOutletContext<TBoardPage>()
+    const { boards, setBoards, setShowStatus, showDotMenu, setShowDotMenu, showStatus, paramsBoard, showDetails, setShowDetails, setShowEditTask, showEditTask, setDeleteTask, setSubtasks, setRenderInputsArr, toggle } = useOutletContext<TContext>()
     const { getTaskByName, getSubtasksCompletedCount, handleChangeIsCompleted, handleChangeStatus } = index({ paramsBoard, setBoards, boards })
     const { H4, H2, P1 } = tailwind()
     const task = getTaskByName()

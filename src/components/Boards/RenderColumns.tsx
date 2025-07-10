@@ -5,7 +5,7 @@ import index from "../../utils"
 export default function RenderColumns() {
 
 
-    const { boards, setBoards, paramsBoard, setShowDetails, toggle, setShowDotMenuHeader } = useOutletContext<TBoardPage>()
+    const { boards, setBoards, paramsBoard, setShowDetails, toggle, setShowDotMenuHeader } = useOutletContext<TContext>()
 
     const { getSubtasksCompletedCount, storeTaskName, storeColumnName } = index({ paramsBoard, setBoards, boards })
     const { H4, H3 } = tailwind()
