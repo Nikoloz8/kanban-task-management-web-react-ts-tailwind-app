@@ -65,7 +65,7 @@ export default function Header() {
                     <div className="flex gap-[16px]">
                         {isMobile ? <img src="/images/logo-mobile.svg" alt="" /> : ""}
                         <div className=" flex gap-[8px] items-center">
-                            <h1 onClick={() => isMobile && setShowSidebar(!showSidebar)} className={`${H1} ${toggle ? "text-[#000112]!" : ""} text-[#FFFFFF] transition-all duration-1000 ${isMobile ? "cursor-pointer" : ""} max-sm:text-[1.8rem]! ${showSidebar && !isMobile && "ml-[77px]"}`}>{board}</h1>
+                            <h1 onClick={() => isMobile && setShowSidebar(!showSidebar)} className={`${H1} ${toggle ? "text-[#000112]!" : ""} text-[#FFFFFF] transition-all duration-1000 ${isMobile ? "cursor-pointer" : ""} max-sm:text-[1.8rem]! ${showSidebar && !isMobile && "ml-[77px]"}`}>{board ? board : "Choose Platform"}</h1>
                             {isMobile ? <img src="/images/icon-chevron-down.svg" className={`mt-[4px]! transition-all duration-500" ${showSidebar ? "rotate-180" : ""}`} alt="" /> : ""}
                         </div>
                     </div>
